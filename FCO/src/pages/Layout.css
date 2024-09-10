@@ -1,0 +1,12 @@
+#layout
+{
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+}
+#lineupBlue, #lineupRed, #lineupNew
+{
+    position: absolute;
+}

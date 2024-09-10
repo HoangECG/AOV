@@ -1,0 +1,479 @@
+:root
+{
+    --bg-width-red: 20vh; 
+    --bg-height-red: 20vh;
+    --logo-width-red: 20vh; /*80vw 150px*/
+    --logo-height-red: 20vh; /*80vh 150px*/
+    --trans-red: 0.5s ease-in-out;
+    --img-width-red: 652px;
+    --img-height-red: 813px;
+    --line-color-red: #FFC502;
+    --opacity-red: 0%;
+    --left-1-red: -500px;
+    --left-2-red: -500px;
+    --left-3-red: -500px;
+    --left-4-red: -500px;
+    --left-5-red: -500px;
+    --flex-1-red: 1;
+    --flex-2-red: 1;
+    --flex-3-red: 1;
+    --flex-4-red: 1;
+    --flex-5-red: 1;
+    --pos-name1-red: 0px;
+    --pos-name2-red: 0px;
+    --pos-name3-red: 0px;
+    --pos-name4-red: 0px;
+    --pos-name5-red: 0px;
+    --flex-name-1-red: 0;
+    --flex-name-2-red: 0;
+    --flex-name-3-red: 0;
+    --flex-name-4-red: 0;
+    --flex-name-5-red: 0;
+}
+
+#lineup-red-master
+{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: var(--opacity-red);
+    transition: 0.5s ease-in-out;
+
+}
+#background-red
+{
+    width: var(--bg-width-red);
+    height: var(--bg-height-red);
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--trans-red);
+}
+#background-red::after
+{
+    content: '';
+    width: 200vw;
+    height: 200vw;
+    display: block;
+    z-index: -1;
+    position: absolute;
+    top: -40rem; right: -20rem; bottom: -20rem; left: -60rem;
+    background: linear-gradient(0deg,#00F1FF, #FFC601);
+    animation: rotate-gradient 3s ease-in-out infinite;
+}
+@keyframes rotate-gradient
+{
+    to { transform: rotate(360deg) }
+}
+
+#lineup-red-ctn
+{
+    width: calc(var(--bg-width-red) - 4px);
+    height: calc(var(--bg-height-red) - 4px);
+    background: black;
+    transition: var(--trans-red);
+    position: relative;
+}
+.logo-team-red
+{
+    width: var(--logo-height-red);
+    height: var(--logo-height-red);
+    transition: 0.5s ease-in-out;
+    overflow: hidden;
+}
+.logo-team-red-ctn
+{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: var(--logo-width-red);
+    height: var(--logo-height-red);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(#ffffff, #ffd68f);
+    transition: 0.5s ease-in-out;
+    z-index: 999;
+    transition: var(--trans-red);
+
+}
+#team-red-name-tab
+{
+    width: 100%;
+    height: var(--logo-height-red);
+    position: relative;
+    padding-left: var(--logo-height-red);
+    color: white;
+    font-size: 115px;
+    text-indent: 40px;
+    line-height: var(--logo-height-red);
+    font-family: 'SVN-Engine';
+    background: url(../img/pttn1.png) center right/ 70% no-repeat;
+    background-color: #383837;
+    animation: animation-tab-name 3s ease-in-out infinite;
+}
+@keyframes animation-tab-name
+{
+    0%, 100%
+    {
+        background-position-x: 621px; 
+    }
+    50%
+    {
+        background-position-x: 590px;
+    }
+}
+
+#line-red
+{
+    width: 100%;
+    height: 25px;
+    background-color: var(--line-color-red);
+    transition: var(--trans-red);
+
+}
+#player-red-ctn
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--line-color-red);
+    transition: var(--trans-red);
+
+}
+.player-red-lineup-style
+{
+    background-color: #414144;
+    position: relative;
+    flex: 1;
+    margin: 0px 1px;
+    transition: 0.5s ease-in-out;
+    overflow: hidden;
+    transition: var(--trans-red);
+
+}
+.player-red-lineup-style::after
+{
+    content: '';
+    background: url('../img/pttn.png') center / cover no-repeat;
+    width: 450px;
+    height: 100%;
+    position: absolute;
+    right: -50px;
+    opacity: 0.15;
+    animation: back-player 5s infinite;
+}
+@keyframes back-player
+{
+    0%,100%
+    {
+        background-position: 0px;
+        opacity: .15;
+    }
+    50%
+    {
+        background-position: 20px;
+        opacity: .3;
+    }
+}
+.player-red-lineup-img
+{
+    width: calc(var(--img-width-red)*1.2);
+    height: calc(var(--img-height-red)*1.2);
+    position: absolute;
+    right: -220px;
+    z-index: 2;
+    transition: var(--trans-red);
+
+}
+
+.player_lineup-red-tabname
+{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 80px;
+    z-index: 4;
+    transition: var(--trans-red);
+
+}
+.player_lineup-red-tabname::before
+{
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 80px;
+    clip-path: polygon(0 0, 100% 0%, 92% 100%, 0% 100%);
+    background: white;
+    z-index: 3;
+    transition: var(--trans-red);
+
+}
+.player_lineup-red-playername
+{
+    width: 0px; 
+/* 230px */
+    font-family: 'SVN-Engine';
+    position: relative;
+    left: -15px;
+    bottom: -22px;
+    text-indent: 15px;
+    color: black;
+    font-size: 40px;
+    text-transform: uppercase;
+    transition: 0.5s ease-in-out;
+    z-index: 6;
+    flex: 7;
+}
+#player_lineup-red-playername-1::before
+{
+    content: "DSL";
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    font-size: 25px;
+    top: -18px;
+    left: 2px;
+    color: black;
+}
+#player_lineup-red-playername-2::before
+{
+    content: "JGL";
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    font-size: 25px;
+    top: -18px;
+    left: 2px;
+    color: black;
+}
+#player_lineup-red-playername-3::before
+{
+    content: "MID";
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    font-size: 25px;
+    top: -18px;
+    left: 2px;
+    color: black;
+}
+#player_lineup-red-playername-4::before
+{
+    content: "ADL";
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    font-size: 25px;
+    top: -18px;
+    left: 2px;
+    color: black;
+}
+#player_lineup-red-playername-5::before
+{
+    content: "SUP";
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    font-size: 25px;
+    top: -18px;
+    left: 2px;
+    color: black;
+}
+#player_lineup-red-tabname-1 > .player_lineup-role
+{
+    position: relative;
+    left: -10px;
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+    background: url('../img/1DSL.png') center / contain no-repeat;
+    flex: 1;
+    transition: 0.5s ease-in-out;
+    z-index: 5;
+}
+#player_lineup-red-tabname-2 > .player_lineup-role
+{
+    position: relative;
+    left: -10px;
+    width: 100%;
+    height: 60px;
+    margin: 10px;
+    background: url('../img/2JGL.png') center / contain no-repeat;
+    flex: 1;
+    transition: 0.5s ease-in-out;
+    z-index: 5;
+}
+#player_lineup-red-tabname-3 > .player_lineup-role
+{
+    position: relative;
+    left: -10px;
+    width: 100%;
+    height: 60px;
+    margin: 10px;
+    background: url('../img/3MID.png') center / contain no-repeat;
+    flex: 1;
+    transition: 0.5s ease-in-out;
+    z-index: 5;
+}
+#player_lineup-red-tabname-4 > .player_lineup-role
+{
+    position: relative;
+    left: -10px;
+    width: 100%;
+    height: 60px;
+    margin: 10px;
+    background: url('../img/4ADL.png') center / contain no-repeat;
+    flex: 1;
+    transition: 0.5s ease-in-out;
+    z-index: 5;
+}
+#player_lineup-red-tabname-5 > .player_lineup-role
+{
+    position: relative;
+    left: -10px;
+    width: 100%;
+    height: 60px;
+    margin: 10px;
+    background: url('../img/5SUP.png') center / contain no-repeat;
+    flex: 1;
+    transition: 0.5s ease-in-out;
+    z-index: 5;
+}
+.player_lineup_KDA-red ,
+.player_lineup_MVP-red
+{
+    margin-top: 15px;
+    color: #FFC600;
+    font-size: 180px;
+    font-family: 'SVN-Engine';
+    font-style: italic;
+    letter-spacing: -4px;
+    transition: 0.5s ease-in-out;
+}
+.player_lineup_KDA-red::before
+{
+    content: 'AVG KDA';
+    position: absolute;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    background: white;
+    color: black;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    font-family: 'SVN-Engine';
+    font-style: italic;
+    transition: 0.5s ease-in-out;
+    clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
+}
+.player_lineup_MVP-red::before
+{
+    content: 'AVG MVP';
+    position: absolute;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    background: white;
+    color: black;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    font-family: 'SVN-Engine';
+    font-style: italic;
+    transition: 0.5s ease-in-out;
+    clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
+}
+.player_lineup_Rank-red
+{
+    background: black;
+    width: 240px;
+    height: 40px;
+    color: white;
+    font-size: 35px;
+    line-height: 40px;
+    font-family: 'SVN-Engine';
+    font-style: italic;
+    text-indent: 20px;
+    position: relative;
+    top: -40px;
+    transition: 0.5s ease-in-out;
+    clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
+}
+.onOff-red1
+{
+    position: relative;
+    left: var(--left-1-red);
+}
+.onOff-red2
+{
+    position: relative;
+    left: var(--left-2-red);
+}
+.onOff-red3
+{
+    position: relative;
+    left: var(--left-3-red);
+}
+.onOff-red4
+{
+    position: relative;
+    left: var(--left-4-red);
+}
+.onOff-red5
+{
+    position: relative;
+    left: var(--left-5-red);
+}
+#player-lineup-red-1
+{
+    flex: var(--flex-1-red);
+}
+#player-lineup-red-2
+{
+    flex: var(--flex-2-red);
+}
+#player-lineup-red-3
+{
+    flex: var(--flex-3-red);
+}
+#player-lineup-red-4
+{
+    flex: var(--flex-4-red);
+}
+#player-lineup-red-5
+{
+    flex: var(--flex-5-red);
+}
+#player_lineup-red-playername-1
+{
+    width: var(--pos-name1-red);
+    flex: var(--flex-name-1-red);
+}
+#player_lineup-red-playername-2
+{
+    width: var(--pos-name2-red);
+    flex: var(--flex-name-2-red);
+}
+#player_lineup-red-playername-3
+{
+    width: var(--pos-name3-red);
+    flex: var(--flex-name-3-red);
+}
+#player_lineup-red-playername-4
+{
+    width: var(--pos-name4-red);
+    flex: var(--flex-name-4-red);
+}
+#player_lineup-red-playername-5
+{
+    width: var(--pos-name5-red);
+    flex: var(--flex-name-5-red);
+}
