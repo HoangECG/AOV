@@ -590,13 +590,16 @@ function Backend() {
         // Return backend component
         // banpick container
         function BanpickContainer(){
+            function HandleSyncBanpickButtonClick() {
+
+            }
             return (
                 <div id="banpickContainer" className="box-ctn">
-                    <h1 className="box-title">BANPICK GAME {game}</h1>
+                    <h1 className="box-title">BAN GAME {game}</h1>
                     <div className="frag-ctn">
                         <InputRender
                             name="Ban 1"
-                            placeholder="Champ"
+                            placeholder="Ban 1"
                             inputID="ban1"
                             labelClassName="label-style"
                             inputClassName="input-style"
@@ -604,14 +607,172 @@ function Backend() {
                             listData={listChamp}
                         />
                         <InputRender
-                            name="DATE"
-                            placeholder="DATE"
-                            inputID="date"
+                            name="Ban 5"
+                            placeholder="Ban 5"
+                            inputID="ban5"
                             labelClassName="label-style"
                             inputClassName="input-style"
-                            idDatalist="id-data-list"
-                            listData={[]}
-                            value={date}
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 2"
+                            placeholder="Ban 2"
+                            inputID="ban2"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 6"
+                            placeholder="Ban 6"
+                            inputID="ban6"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 3"
+                            placeholder="Ban 3"
+                            inputID="ban3"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 7"
+                            placeholder="Ban 7"
+                            inputID="ban7"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 4"
+                            placeholder="Ban 4"
+                            inputID="ban4"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="Ban 8"
+                            placeholder="Ban 8"
+                            inputID="ban8"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                    </div>
+                    <h1 className="box-title">PICK GAME {game}</h1>
+                    <div className="frag-ctn">
+                        <InputRender
+                            name="pick 1"
+                            placeholder="pick 1"
+                            inputID="pick1"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-pickpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 6"
+                            placeholder="pick 6"
+                            inputID="pick6"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 2"
+                            placeholder="pick 2"
+                            inputID="pick2"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-pickpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 7"
+                            placeholder="pick 7"
+                            inputID="pick7"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 3"
+                            placeholder="pick 3"
+                            inputID="pick3"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-pickpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 8"
+                            placeholder="pick 8"
+                            inputID="pick8"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 4"
+                            placeholder="pick 4"
+                            inputID="pick4"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-pickpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 9"
+                            placeholder="pick 9"
+                            inputID="pick9"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 5"
+                            placeholder="pick 5"
+                            inputID="pick5"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick-pickpick"
+                            listData={listChamp}
+                        />
+                        <InputRender
+                            name="pick 10"
+                            placeholder="pick 10"
+                            inputID="pick10"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-banpick"
+                            listData={listChamp}
+                        />
+                        <BtnRender
+                            btnName="SYNC BANPICK"
+                            idBtn="syncBanpickBtn"
+                            classBtn="btn"
+                            btnClick={HandleSyncBanpickButtonClick}
+                        />
+                        <BtnRender
+                            btnName="RESET BANPICK"
+                            idBtn="resetBanpickBtn"
+                            classBtn="btn"
+                            btnClick={HandleSyncBanpickButtonClick}
                         />
                     </div>
                 </div>
