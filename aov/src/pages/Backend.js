@@ -307,7 +307,8 @@ function Backend() {
                         "player7": window.localStorage.getItem('player2'),
                         "player8": window.localStorage.getItem('player3'),
                         "player9": window.localStorage.getItem('player4'),
-                        "player10": window.localStorage.getItem('player5')
+                        "player10": window.localStorage.getItem('player5'),
+                        "stats": GetStatsLocal()
                     })
                 })
                 setTimeout(function() {
