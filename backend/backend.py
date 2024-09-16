@@ -160,6 +160,9 @@ async def response(item: str):
                 return lineupFull
             except:
                 return False
+    elif item.split("-")[0] == "bp":
+        rqRCV = item.split("-")
+        
             
         
     else:
@@ -218,8 +221,9 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                 await manager.send_personal_message(response_json,websocket)
 
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
-        await manager.broadcast(f"Client #{client_id} disconnected")
+        pass
+        # manager.disconnect(websocket)
+        # await manager.broadcast(f"Client #{client_id} disconnected")
     
 
 if __name__ == "__main__":

@@ -54,11 +54,19 @@ function Backend() {
 
     useEffect(() => {
         async function fetchMyAPI() {
-            let response = await beAPI.Getcrrmatch()
-            let responseListChamps = await beAPI.GetChampsName()
-            let responseListTeam = await beAPI.GetListTeam()
-            let responseLineupFullBlue = await beAPI.GetLineupFull(teamBlue)
-            let responseLineupFullRed = await beAPI.GetLineupFull(teamRed)
+            const response = await beAPI.Getcrrmatch()
+            const responseListChamps = await beAPI.GetChampsName()
+            const responseListTeam = await beAPI.GetListTeam()
+            try {
+                const responseLineupFullBlue = await beAPI.GetLineupFull(window.localStorage.getItem('team-1'))
+                const responseLineupFullRed = await beAPI.GetLineupFull(window.localStorage.getItem('team-2'))
+                window.localStorage.setItem('linupFull-1',JSON.stringify(await responseLineupFullBlue))
+                window.localStorage.setItem('linupFull-2',JSON.stringify(await responseLineupFullRed))
+                setLineupFullBlue(await responseLineupFullBlue)
+                setLineupFullRed(await responseLineupFullRed)
+            } catch (error) {
+                
+            }
             // get list champs name 
             setListChamp(await responseListChamps)
             setListTeam(await responseListTeam)
@@ -105,11 +113,9 @@ function Backend() {
             window.localStorage.setItem('pick8',await response['pick8'])
             window.localStorage.setItem('pick9',await response['pick9'])
             window.localStorage.setItem('pick10',await response['pick10'])
-            window.localStorage.setItem('linupFull-1',JSON.stringify(await responseLineupFullBlue))
-            window.localStorage.setItem('linupFull-2',JSON.stringify(await responseLineupFullRed))
+            
             // set variable
-            setLineupFullBlue(await responseLineupFullBlue)
-            setLineupFullRed(await responseLineupFullRed)
+            
             setGame(await response['game'])
             setMatch(await response['matchName'])
             setRound(await response['round'])
@@ -160,11 +166,20 @@ function Backend() {
             window.localStorage.setItem(props.inputID,document.getElementById(props.inputID).value)
             if (props.inputID === 'team-1'){
                 if ((await beAPI.GetLineupFull(document.getElementById(props.inputID).value)) != null) {
-                    setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
+                    try {
+                        setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
+                        setTeamNameBlue(await beAPI.GetListTeam()[document.getElementById(props.inputID).value])
+                    } catch (error) {
+                    }
                 }
             }else if(props.inputID === 'team-2') {
                 if ((await beAPI.GetLineupFull(document.getElementById(props.inputID).value)) != null) {
-                    setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
+                    try {
+                        setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
+                        setTeamNameRed(await beAPI.GetListTeam()[document.getElementById(props.inputID).value])
+                    } catch (error) {
+                        
+                    }
                 }
             }
         }
@@ -173,13 +188,20 @@ function Backend() {
                 <option key={index} value={props} />
             )
         }
+        function Maplist(opt){
+            try {
+                return props.listData.map(opt)
+            } catch (error) {
+                console.log(1)
+            }
+        }
         return (
             <div className="input-div">
                 <label htmlFor={props.inputID} className={props.labelClassName}>{props.name}</label>
                 <input id={props.inputID} className={props.inputClassName} list={props.idDatalist}
                     type="text" placeholder={props.placeholder} name={props.name} defaultValue={props.value} onChange={onchangeInput}></input>
                 <datalist id={props.idDatalist}>
-                    {props.listData.map(RenderOpt)}
+                    {Maplist(RenderOpt)}
                 </datalist>
             </div>
         )
@@ -196,6 +218,26 @@ function Backend() {
         
         // Component Match ID check
         function MatchCreate() {
+            function GetStatsLocal(){
+                const statsNow = {'MVP1': '0','KDA1':'0','MVP2': '0','KDA2':'0','MVP3': '0','KDA3':'0','MVP4': '0','KDA4':'0','MVP5': '0','KDA5':'0','MVP6': '0','KDA6':'0','MVP7': '0','KDA7':'0','MVP8': '0','KDA8':'0','MVP9': '0','KDA9':'0','MVP10': '0','KDA10':'0'}
+                try {
+                    for (let index = 1; index <= 10; index++) {
+                        if (window.localStorage.getItem(`MVP${index}`) === null){
+                            statsNow[`MVP${index}`] = window.localStorage.getItem(`MVP${index}`);
+                        }else{
+                            statsNow[`MVP${index}`] = '0';
+                        }
+                        if (window.localStorage.getItem(`KDA${index}`) === null){
+                            statsNow[`KDA${index}`] = window.localStorage.getItem(`KDA${index}`);
+                        }else{
+                            statsNow[`KDA${index}`] = '0';
+                        }
+                    }
+                    return statsNow
+                } catch (error) {
+                    return statsNow
+                }
+            }
             // Handle button click
             async function HandleSyncButtonClick() {
                     fetch(`http://${beAPI.hostIP}:14596/api/post/crm`, {
@@ -226,12 +268,13 @@ function Backend() {
                             "player7": window.localStorage.getItem('player7'),
                             "player8": window.localStorage.getItem('player8'),
                             "player9": window.localStorage.getItem('player9'),
-                            "player10": window.localStorage.getItem('player10')
+                            "player10": window.localStorage.getItem('player10'),
+                            "stats": GetStatsLocal()
                         })
                     })
                     setTimeout(function() {
                         window.location.reload()
-                      }, 1000);
+                      }, 300);
                     
                 }
                 // await return true then set reload
@@ -269,7 +312,7 @@ function Backend() {
                 })
                 setTimeout(function() {
                     window.location.reload()
-                  }, 1000);
+                  }, 300);
                 // await return true then set reload
             }
             // Handle create button
@@ -483,7 +526,7 @@ function Backend() {
                             <InputRender
                                 name="DSL"
                                 placeholder="DSL"
-                                inputID="blueDSL"
+                                inputID="player1"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="blueDSL-id-data-list"
@@ -493,7 +536,7 @@ function Backend() {
                             <InputRender
                                 name="JGL"
                                 placeholder="JGL"
-                                inputID="blueJGL"
+                                inputID="player2"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="blueJGL-id-data-list"
@@ -503,7 +546,7 @@ function Backend() {
                             <InputRender
                                 name="MID"
                                 placeholder="MID"
-                                inputID="blueMID"
+                                inputID="player3"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="blueMID-id-data-list"
@@ -513,7 +556,7 @@ function Backend() {
                             <InputRender
                                 name="ADL"
                                 placeholder="ADL"
-                                inputID="blueADL"
+                                inputID="player4"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="blueADL-id-data-list"
@@ -523,7 +566,7 @@ function Backend() {
                             <InputRender
                                 name="SUP"
                                 placeholder="SUP"
-                                inputID="blueSUP"
+                                inputID="player5"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="blueSUP-id-data-list"
@@ -535,7 +578,7 @@ function Backend() {
                         <InputRender
                                 name="DSL"
                                 placeholder="DSL"
-                                inputID="RedDSL"
+                                inputID="player6"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="RedDSL-id-data-list"
@@ -545,7 +588,7 @@ function Backend() {
                             <InputRender
                                 name="JGL"
                                 placeholder="JGL"
-                                inputID="RedJGL"
+                                inputID="player7"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="RedJGL-id-data-list"
@@ -555,7 +598,7 @@ function Backend() {
                             <InputRender
                                 name="MID"
                                 placeholder="MID"
-                                inputID="RedMID"
+                                inputID="player8"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="RedMID-id-data-list"
@@ -565,7 +608,7 @@ function Backend() {
                             <InputRender
                                 name="ADL"
                                 placeholder="ADL"
-                                inputID="RedADL"
+                                inputID="player9"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="RedADL-id-data-list"
@@ -575,7 +618,7 @@ function Backend() {
                             <InputRender
                                 name="SUP"
                                 placeholder="SUP"
-                                inputID="RedSUP"
+                                inputID="player10"
                                 labelClassName="label-style"
                                 inputClassName="input-style"
                                 idDatalist="RedSUP-id-data-list"
@@ -778,6 +821,205 @@ function Backend() {
                 </div>
             )
         }
+        function StatsContainer(){
+            function GetValueStats(props){
+                try {
+                    return window.localStorage.getItem(props)
+                } catch (error) {
+                    
+                }
+            }
+            function HandleSyncStatsButtonClick() {
+
+            }
+            return (
+                <div id="banpickContainer" className="box-ctn">
+                    <h1 className="box-title">Player Stats</h1>
+                    <div className="frag-ctn">
+                        <InputRender
+                            name="MVP 1"
+                            placeholder="MVP 1"
+                            inputID="MVP1"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP1')}
+                        />
+                        <InputRender
+                            name="KDA 1"
+                            placeholder="KDA 1"
+                            inputID="KDA1"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA1')}
+                        />
+                        <InputRender
+                            name="MVP 2"
+                            placeholder="MVP 2"
+                            inputID="MVP2"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP2')}
+                        />
+                        <InputRender
+                            name="KDA 2"
+                            placeholder="KDA 2"
+                            inputID="KDA2"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA2')}
+                        />
+                        <InputRender
+                            name="MVP 3"
+                            placeholder="MVP 3"
+                            inputID="MVP3"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP3')}
+                        />
+                        <InputRender
+                            name="KDA 3"
+                            placeholder="KDA 3"
+                            inputID="KDA3"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA3')}
+                        />
+                        <InputRender
+                            name="MVP 4"
+                            placeholder="MVP 4"
+                            inputID="MVP4"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP4')}
+                        />
+                        <InputRender
+                            name="KDA 4"
+                            placeholder="KDA 4"
+                            inputID="KDA4"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA4')}
+                        />
+                        <InputRender
+                            name="MVP 5"
+                            placeholder="MVP 5"
+                            inputID="MVP5"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP5')}
+                        />
+                        <InputRender
+                            name="KDA 5"
+                            placeholder="KDA 5"
+                            inputID="KDA5"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA5')}
+                        />
+                        <InputRender
+                            name="MVP 6"
+                            placeholder="MVP 6"
+                            inputID="MVP6"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP6')}
+                        />
+                        <InputRender
+                            name="KDA 6"
+                            placeholder="KDA 6"
+                            inputID="KDA6"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA6')}
+                        />
+                        <InputRender
+                            name="MVP 7"
+                            placeholder="MVP 7"
+                            inputID="MVP7"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP7')}
+                        />
+                        <InputRender
+                            name="KDA 7"
+                            placeholder="KDA 7"
+                            inputID="KDA7"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA7')}
+                        />
+                        <InputRender
+                            name="MVP 8"
+                            placeholder="MVP 8"
+                            inputID="MVP8"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP8')}
+                        />
+                        <InputRender
+                            name="KDA 8"
+                            placeholder="KDA 8"
+                            inputID="KDA8"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA8')}
+                        />
+                        <InputRender
+                            name="MVP 9"
+                            placeholder="MVP 9"
+                            inputID="MVP9"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP9')}
+                        />
+                        <InputRender
+                            name="KDA 9"
+                            placeholder="KDA 9"
+                            inputID="KDA9"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA9')}
+                        />
+                        <InputRender
+                            name="MVP 10"
+                            placeholder="MVP 10"
+                            inputID="MVP10"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-mvp"
+                            value={GetValueStats('MVP10')}
+                        />
+                        <InputRender
+                            name="KDA 10"
+                            placeholder="KDA 10"
+                            inputID="KDA10"
+                            labelClassName="label-style"
+                            inputClassName="input-style"
+                            idDatalist="id-data-list-kda"
+                            value={GetValueStats('KDA10')}
+                        />
+                    </div>
+                </div>
+            )
+        }
         return (
             <div className="body-ctn row-ctn">
                 <div className="colum-ctn">
@@ -789,6 +1031,9 @@ function Backend() {
                 </div>
                 <div className="colum-ctn">
                     <BanpickContainer/>
+                </div>
+                <div className="colum-ctn">
+                    <StatsContainer/>
                 </div>
             </div>
         );
