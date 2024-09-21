@@ -1,56 +1,136 @@
-import React from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import './Tabs.css';
-import * as beAPI from '../../api/FetchApi'
-import * as Handleimport from "./LayoutHandle/HandleImport"
+import * as beAPI from '../../api/FetchApi';
 
-
-
-var ws = new WebSocket(`ws://${beAPI.hostIP}:14596/ws/0`)
-
-
-// function TabPredict() {
-//     return (
-//         <div id='tab-predic'>
-//             <img id='predict-logo-left' src={Handleimport.importLogo('HN')} alt='img' />
-//             <img id='predict-logo-right' src={Handleimport.importLogo('BD')} alt='img' />
-//         </div>
-//     )
-// }
-
+// WebSocket initialization
+var ws = new WebSocket(`ws://${beAPI.hostIP}:${beAPI.portApi}/ws/0`);
 
 export default function Tab() {
+  const [code, setCode] = useState('asdhjsahdkjas');
+  const [minusTime, setMinusTime] = useState('00:00');
+  const [minutes, setMinutes] = useState(0); 
+  const [seconds, setSeconds] = useState(0); 
+  const [timeLeft, setTimeLeft] = useState(0); 
+  const [isActive, setIsActive] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
-    // show function
-    function ShowTab(idTabs) {
-        let tabWin = document.getElementById(idTabs)
-        console.log(tabWin)
-        const p = Promise.resolve(123)
-        p.then(() => {
-            tabWin.style.bottom = '15px'
-            return new Promise(resolve => setTimeout(resolve, 15500))
-        })
-            .then(() => {
-                tabWin.style.bottom = '-999px'
-            })
-    }
+  // Start the countdown
+  const handleStart = () => {
+    const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
+    setTimeLeft(totalSeconds);
+    setIsActive(true);
+    setIsComplete(false);
+  };
 
-    // def tab
-    function TabsWin(props) {
-        return (
-            <img id='tabsWin' src={Handleimport.importIMG('CPN1')} alt='img' />
-        )
-    }
-    // follow ws
-    ws.onmessage = function (event) {
-        if (event.data === 'show-tabswin') {
-            ShowTab('tabsWin')
-        }
-    }
+  // Subtract time dynamically
+  const subtractTime = (min = 0, sec = 0) => {
+    const subtractSeconds = min * 60 + sec;
+    setTimeLeft((prevTime) => Math.max(0, prevTime - subtractSeconds));
+  };
 
+  // Countdown logic
+  useEffect(() => {
+    let interval = null;
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsComplete(true);
+      clearInterval(interval);
+      setIsActive(false);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, timeLeft]);
+
+  // Format time for display
+  const formatTime = (time) => {
+    const mins = Math.floor(time / 60);
+    const secs = time % 60;
+    return `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+  };
+
+  // Countdown display component
+  function ShowCountdown() {
     return (
-        <div id="tabs">
-            <TabsWin />
-            {/* <TabPredict /> */}
+      <Fragment>
+        <div id='giftcode-name'>GIFTCODE COUNTDOWN</div>
+        <div id='time-cd-id'>
+          <div id='cd-num'>{isComplete ? ShowLink() : formatTime(timeLeft)}</div>
         </div>
-    )
+        <div id='popup-minus'>GOAL!!! Minus {minusTime}</div>
+        <div id='popup-link'>Tại: FCOnline.garena.vn</div>
+      </Fragment>
+    );
+  }
+
+  // Layout control functions
+  function StartCountdownLayout() {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--opacity-minus', '0');
+    rootStyle.setProperty('--opacity-link', '0');
+    rootStyle.setProperty('--top-link', '65px');
+    rootStyle.setProperty('--top-minus', '65px');    
+    rootStyle.setProperty('--opacity-giftcode', '0');
+    rootStyle.setProperty('--top-name', '20px');     
+    rootStyle.setProperty('--box-height', '75px');   
+    rootStyle.setProperty('--cd-num-opacity', '1');  
+    rootStyle.setProperty('--main-tab-pos', '25px'); 
+    rootStyle.setProperty('--name-tab-pos', '15px'); 
+
+  }
+
+  function ShowMinus() {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--opacity-minus', '1');   
+    rootStyle.setProperty('--top-minus', '90px');    
+    setTimeout(() => {
+    rootStyle.setProperty('--top-minus', '65px');    
+    rootStyle.setProperty('--opacity-minus', '0');
+    }, 3500);
+  }
+  function ShowLink() {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--opacity-link', '1');   
+    rootStyle.setProperty('--top-link', '90px');
+    return code  
+  }
+
+  function StopCountdownLayout() {
+    setIsComplete(true);
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--main-tab-pos', '-325px'); 
+    rootStyle.setProperty('--name-tab-pos', '-325px'); 
+    rootStyle.setProperty('--cd-num-opacity', '0');   
+    rootStyle.setProperty('--opacity-giftcode', '0');
+    rootStyle.setProperty('--opacity-minus', '0');
+    rootStyle.setProperty('--top-link', '65px');
+    rootStyle.setProperty('--top-minus', '65px');    
+    rootStyle.setProperty('--opacity-link', '0');
+  }
+
+  // Handle WebSocket messages
+  ws.onmessage = function (event) {
+    const data = event.data.split('-');
+    if (data[0] === 'startcountdown' && data.length === 4) {
+      setMinutes(parseInt(data[1]));
+      setSeconds(parseInt(data[2]));
+      setCode(data[3]);
+      setTimeout(() => handleStart(), 100);
+    } else if (data[0] === 'minus' && data.length === 3) {
+      subtractTime(parseInt(data[1]), parseInt(data[2]));
+      setMinusTime(`${data[1]}:${data[2]}`);
+      setTimeout(() => ShowMinus(), 200);
+    } else if (event.data === 'showcountdown') {
+      StartCountdownLayout();
+    } else if (event.data === 'stopcountdown') {
+      StopCountdownLayout();
+    }
+  };
+
+  return (
+    <div id="tabs">
+      <ShowCountdown />
+    </div>
+  );
 }

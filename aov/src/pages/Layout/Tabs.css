@@ -1,17 +1,106 @@
-#tabs
-{
+:root {
+    --trans: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --main-tab-pos: -325px;
+    --name-tab-pos: -325px;
+    --top-name: 15px;
+    --box-height: 25px;
+    --top-minus: 65px;
+    --opacity-giftcode: 0;
+    --top-link: 65px;
+    --opacity-link: 0;
+  }
+  
+  #tabs {
     position: absolute;
     top: 0px;
     width: 100vw;
     height: 100vh;
     background: transparent;
     overflow: hidden;
-}
-#tabsWin {
-    width: fit-content;
-    height: fit-content;
+  }
+  
+  #time-cd-id {
+    width: 250px;
+    height: var(--box-height);
+    background-color: black;
     position: absolute;
-    bottom: -999px;
-    left: 15px;
-    transition: 1s ease-in-out;
-}
+    right: var(--main-tab-pos);
+    top: 15px;
+    border: 1px solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to right bottom, #6a5af9, #f62682);
+    transition: var(--trans);
+    z-index: 999;
+  }
+  
+  #cd-num {
+    color: white;
+    position: relative;
+    font-size: 45px;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    top: 28px;
+    text-align: center;
+    transition: var(--trans);
+    opacity: var(--cd-num-opacity);
+    z-index: 999;
+  }
+  
+  #giftcode-show {
+    color: white;
+    font-size: 25px;
+    width: 100%;
+    height: 35px;
+    line-height: 25px;
+    text-align: center;
+    top: 35px;
+    opacity: var(--opacity-giftcode);
+    transition: var(--trans);
+    z-index: 999;
+  }
+  
+  #giftcode-name {
+    position: absolute;
+    color: black;
+    width: 270px;
+    height: 25px;
+    background-color: yellow;
+    text-align: center;
+    line-height: 25px;
+    font-size: 22px;
+    right: var(--name-tab-pos);
+    top: var(--top-name);
+    transition: var(--trans);
+    border: 1px black solid;
+    z-index: 1000;
+  }
+  
+  #popup-minus {
+    position: absolute;
+    background-color: yellow;
+    width: 250px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 18px;
+    text-align: center;
+    right: var(--main-tab-pos);
+    top: var(--top-minus);
+    opacity: var(--opacity-minus);
+    transition: var(--trans);
+    z-index: 996;
+  }
+  #popup-link {
+    position: absolute;
+    background-color: yellow;
+    width: 250px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 18px;
+    text-align: center;
+    right: var(--main-tab-pos);
+    top: var(--top-link);
+    opacity: var(--opacity-link);
+    transition: var(--trans);
+    z-index: 997;
+  }

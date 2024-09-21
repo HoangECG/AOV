@@ -1,16 +1,27 @@
 from fastapi import FastAPI, Request, Body
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Dict, Any
 import uvicorn
 import os
 import json
 from fastapi import WebSocket, WebSocketDisconnect
-import csv
+import os.path
+import requests
+from time import sleep
 
+
+
+# configurations
+spreadsheet_id = '1rdSU9mEy7yHltRfwvLFlllAbxhW_yvJyNcBFJxMv2gA'
+api_key = 'AIzaSyARx2UnEZ_gUra4BNBc6_xGYkTX-7TvWDY'
+sheet_name = "data"
+
+
+
+
+
+# app fastapi
 app = FastAPI()
 # Cors accept
 app.add_middleware(
@@ -34,137 +45,54 @@ def getTeams():
         listTeam = list(data.keys())
     return listTeam
 
-# banpick variable
-# range phase 1-16
-banpick = {'Phase': '1', 'Ban1': 'none', 'Ban2': 'none', 'Ban3': 'none', 'Ban4': 'none', 'Ban5': 'none', 'Ban6': 'none', 'Ban7': 'none', 'Ban8': 'none', 'pick1': 'none', 'pick2': 'none', 'pick3': 'none', 'pick4': 'none', 'pick5': 'none', 'pick6': 'none', 'pick7': 'none', 'pick8': 'none', 'pick9': 'none', 'pick10': 'none' }
-
-chat_count = False
+datapull = {}
+# app
 @app.get("/api/{item}")
 async def response(item: str):
-    global chat_count
-    if item == "listmatchID":
-        try:
-            getListID = getID()
-            return {"listmatchID":getListID, "listTeam": list(getTeams())}
-        except:
-            return {"listmatchID":[]}
-    elif item.isnumeric() == True:
-        try:
-            with open(f'./database/match/{item}.json','r') as file:
-                data = json.load(file)
-                return data
-        except:
-            return "notFound"
-    elif item.split("-")[0] == "crn":
-        spldata = item.split("-")
-        newID = int(max(getID())) + 1
-        newMatch = {}
-        dictTeam1 = {}
-        dictTeam2 = {}
-        with open('./database/teams.json', 'r') as file:
-            data = json.load(file)
-            dictTeam1 = data[spldata[1].upper()]
-            dictTeam2 = data[spldata[2].upper()]
-        newMatch["matchId"] = f"{newID}"
-        newMatch["matchName"] = "Match"
-        newMatch["round"] = "round"
-        newMatch["bo"] = spldata[3]
-        newMatch["team-1"] = dictTeam1["team"]
-        newMatch["fullNameTeam-1"] = dictTeam1["fullName"]
-        newMatch["team-2"] = dictTeam2["team"]
-        newMatch["fullNameTeam-2"] = dictTeam2["fullName"]
-        newMatch["lineUpFull-1"] = dictTeam1["players"]
-        newMatch["lineUpFull-2"] = dictTeam2["players"]
-        listGame = []
-        for i in range(int(spldata[3])):
-            status = "pending"
-            if i == 0:
-                status="start"
-            listGame.append({
-                "game": f"{i+1}",
-                "status":f"{status}",
-                "teamBlue": dictTeam1["team"],
-                "fullNameTeamBlue":dictTeam1["fullName"],
-                "teamRed":dictTeam2["team"],
-                "fullNameTeamRed":dictTeam2["fullName"],
-                "lineUpBlue": dictTeam1["players"][0:5],
-                "lineUpRed": dictTeam2["players"][0:5],
-                "pickBlue": ["pick1","pick2","pick3","pick4","pick5"],
-                "pickRed": ["pick1","pick2","pick3","pick4","pick5"],
-                "win":"pending"
-            })
-        newMatch["gameInfo"] = listGame
-        with open(f'./database/match/{newID}.json','w') as file2:
-            json.dump(newMatch,file2)
-        return newID
-    elif item == "bracket":
-        # waiting create match
-        with open(f'./database/bracket.json','r') as file:
-            data = json.load(file)
-            return data
-    elif item == "last":
-        lastID = max(getID())
-        with open(f'./database/match/{lastID}.json','r') as file:
-            data = json.load(file)
-            return data
-    elif item == "crrmatch":
-        lastID = max(getID())
-        with open(f'./database/match/crrmatch.json','r') as file:
-            data = json.load(file)
-            return data
-    elif item.split("-")[0] == "lineup":
-        rqRCV = item.split("-")
-        if rqRCV[1] == "blue":
-            with open('./dataLineup.csv', 'r',encoding='utf-8') as file:
-                csv_reader = csv.DictReader(file,delimiter=',')
-                list_cvt = list(csv_reader)
-                dictTeam = list_cvt[0]
-                # dictTeamRed = list_cvt[1]
-                list_player = []
-                list_player.append({'Team': f'{dictTeam['\ufeffT']}','fullname':f'{dictTeam['Fullname']}'})
-                for i in range(5):
-                    n = i+1
-                    dict = {'ID': n, 'player_name':f'{dictTeam[f'player {n}']}', 'KDA': f'{dictTeam[f'KDA {n}']}', 'rankKDA': f'{dictTeam[f'Rank KDA {n}']}','MVP':f'{dictTeam[f'MVP {n}']}','rankMVP': f'{dictTeam[f'Rank MVP {n}']}' }
-                    list_player.append(dict)
-                return list_player
+    if item == "pulldatasheet":
+        url = f'https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}/values/{sheet_name}!A1:B?alt=json&key={api_key}'
+        response = requests.get(url)
+        sheet_data = response.json()
+        if sheet_data:
+            for i in sheet_data['values']:
+                datapull[i[0]] = i[1]
+            with open(f'./database/crrmatch.json', 'w') as filew:
+                json.dump(datapull,filew)
         else:
-            with open('./dataLineup.csv', 'r',encoding='utf-8') as file:
-                csv_reader = csv.DictReader(file,delimiter=',')
-                list_cvt = list(csv_reader)
-                dictTeam = list_cvt[1]
-                # dictTeamRed = list_cvt[1]
-                list_player = []
-                list_player.append({'Team': f'{dictTeam['\ufeffT']}','fullname':f'{dictTeam['Fullname']}'})
-                for i in range(5):
-                    n = i+1
-                    dict = {'ID': n, 'player_name':f'{dictTeam[f'player {n}']}', 'KDA': f'{dictTeam[f'KDA {n}']}', 'rankKDA': f'{dictTeam[f'Rank KDA {n}']}','MVP':f'{dictTeam[f'MVP {n}']}','rankMVP': f'{dictTeam[f'Rank MVP {n}']}' }
-                    list_player.append(dict)
-                return list_player
-    # banpick api
-    elif item == "champsname":
-        list_of_files = []
-        for (dirpath, dirnames, filenames) in os.walk('./database/champ'):
-            for filename in filenames:
-                if filename.endswith('.png'): 
-                    list_of_files.append(filename.replace('.png',""))
-        return list_of_files
+            print("Failed to fetch data from Google Sheets API.")
+    
+    elif item == "crrmatch":
+        with open(f'./database/crrmatch.json','r') as file:
+            data = json.load(file)
+            return data
     elif item =="listteam":
         return getTeams()
+    elif item.split("-")[0] == "namefull":
+        rqRCV = item.split("-")
+        lineupFull = []
+        if len(item.split("-")) > 1:
+            with open('./database/teams.json', 'r') as file:
+                data = json.load(file)
+                try:
+                    namefull = data[rqRCV[1]]['fullName']
+                    return namefull
+                except:
+                    return False
+        else:
+            pass
     elif item.split("-")[0] == "lineupfull":
         rqRCV = item.split("-")
         lineupFull = []
-        with open('./database/teams.json', 'r') as file:
-            data = json.load(file)
-            try:
-                lineupFull = list(data[rqRCV[1]]['players'])
-                return lineupFull
-            except:
-                return False
-    elif item.split("-")[0] == "bp":
-        rqRCV = item.split("-")
-        
-            
-        
+        if len(item.split("-")) > 1:
+            with open('./database/teams.json', 'r') as file:
+                data = json.load(file)
+                try:
+                    lineupFull = list(data[rqRCV[1]]['players'])
+                    return lineupFull
+                except:
+                    return False
+        else:
+            pass
     else:
         return {"status":"nodata"}
 
@@ -173,6 +101,7 @@ class Rcv(BaseModel):
 
 @app.post("/api/post/{item}")
 async def reciveItem(rcv: Request,item: str):
+    pass
     if item.isnumeric() == True:
         with open(f'./database/match/{item}.json', 'w') as filew:
             json.dump(await rcv.json(),filew)
@@ -184,7 +113,7 @@ async def reciveItem(rcv: Request,item: str):
                 return {"status":"DONE"}
         return True
 
-# websocket def
+# websocket def as
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -193,7 +122,7 @@ class ConnectionManager:
         await websocket.accept()
         self.active_connections.append(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    async def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
@@ -201,7 +130,10 @@ class ConnectionManager:
 
     async def broadcast(self, message: str):
         for connection in self.active_connections:
-            await connection.send_text(message)
+            try:
+                await connection.send_text(message)
+            except:
+                pass
 
 
 manager = ConnectionManager()
@@ -215,16 +147,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
         while True:
             data = await websocket.receive_text()
             await manager.broadcast(f"{data}")
-            # print(data)
-            response_json = json.dumps({'IDList': getID()})
-            if data == 'MatchID-check':
-                await manager.send_personal_message(response_json,websocket)
 
     except WebSocketDisconnect:
-        pass
-        # manager.disconnect(websocket)
-        # await manager.broadcast(f"Client #{client_id} disconnected")
+        manager.disconnect(websocket)
     
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=14596)
+    uvicorn.run(app, host="0.0.0.0", port=10045)

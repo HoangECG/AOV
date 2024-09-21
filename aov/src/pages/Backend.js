@@ -4,19 +4,19 @@ import NavBar from "./NavBar/NavBar"
 import * as beAPI from '../api/FetchApi'
 
 
+// websocket
+var ws = new WebSocket(`ws://${beAPI.hostIP}:${beAPI.portApi}/ws/0`)
+
 function Backend() {
     const [game, setGame] = useState('1')
     const [match, setMatch] = useState('Match 1')
     const [round, setRound] = useState('swiss stage')
     const [bo, setBo] = useState('3')
     const [date, setDate] = useState('20/10/2024')
-    const [teamBlue, setTeamBlue] = useState('SGP')
+    const [teamBlue, setTeamBlue] = useState('STV')
     const [teamNameBlue, setTeamNameBlue] = useState('Hà Nội')
-    const [teamRed, setTeamRed] = useState('SGP')
+    const [teamRed, setTeamRed] = useState('STV')
     const [teamNameRed, setTeamNameRed] = useState('Hà Nội')
-    const [scBlue, setscrBlue] = useState('0')
-    const [scRed, setscrRed] = useState('0')
-    const [listTeam, setListTeam] = useState(['1','2'])
     const [player1, setPlayer1] = useState('player1')
     const [player2, setPlayer2] = useState('player2')
     const [player3, setPlayer3] = useState('player3')
@@ -25,184 +25,103 @@ function Backend() {
     const [player6, setPlayer6] = useState('player6')
     const [player7, setPlayer7] = useState('player7')
     const [player8, setPlayer8] = useState('player8')
-    const [player9, setPlayer9] = useState('player9')
-    const [player10, setPlayer10] = useState('player10')
-    const [lineupFullBlue,setLineupFullBlue] = useState(['1','2','3','4','5'])
-    const [lineupFullRed,setLineupFullRed] = useState(['1','2','3','4','5'])
+    const [scL1, setscL1] = useState('0')
+    const [scL2, setscL2] = useState('0')
+    const [scL3, setscL3] = useState('0')
+    const [scL4, setscL4] = useState('0')
+    const [scL5, setscL5] = useState('0')
+    const [scR1, setscR1] = useState('0')
+    const [scR2, setscR2] = useState('0')
+    const [scR3, setscR3] = useState('0')
+    const [scR4, setscR4] = useState('0')
+    const [scR5, setscR5] = useState('0')
+    const [pkL1, setpkL1] = useState('0')
+    const [pkL2, setpkL2] = useState('0')
+    const [pkL3, setpkL3] = useState('0')
+    const [pkL4, setpkL4] = useState('0')
+    const [pkL5, setpkL5] = useState('0')
+    const [pkR1, setpkR1] = useState('0')
+    const [pkR2, setpkR2] = useState('0')
+    const [pkR3, setpkR3] = useState('0')
+    const [pkR4, setpkR4] = useState('0')
+    const [pkR5, setpkR5] = useState('0')
 
     // banpick const
-    const [listChamp, setListChamp] = useState([])
-    const [ban1, setBan1] = useState('None')
-    const [ban2, setBan2] = useState('None')
-    const [ban3, setBan3] = useState('None')
-    const [ban4, setBan4] = useState('None')
-    const [ban5, setBan5] = useState('None')
-    const [ban6, setBan6] = useState('None')
-    const [ban7, setBan7] = useState('None')
-    const [ban8, setBan8] = useState('None')
-    const [pick1, setPick1] = useState('None')
-    const [pick2, setPick2] = useState('None')
-    const [pick3, setPick3] = useState('None')
-    const [pick4, setPick4] = useState('None')
-    const [pick5, setPick5] = useState('None')
-    const [pick6, setPick6] = useState('None')
-    const [pick7, setPick7] = useState('None')
-    const [pick8, setPick8] = useState('None')
-    const [pick9, setPick9] = useState('None')
-    const [pick10, setPick10] = useState('None')
+    const [game1PlayerPickLeft, setGame1PlayerPickLeft] = useState('df')
+    const [game2PlayerPickLeft, setGame2PlayerPickLeft] = useState('df')
+    const [game3PlayerPickLeft, setGame3PlayerPickLeft] = useState('df')
+    const [game4PlayerPickLeft, setGame4PlayerPickLeft] = useState('df')
+    const [game5PlayerPickLeft, setGame5PlayerPickLeft] = useState('df')
+    const [game1PlayerPickRight, setGame1PlayerPickRight] = useState('df')
+    const [game2PlayerPickRight, setGame2PlayerPickRight] = useState('df')
+    const [game3PlayerPickRight, setGame3PlayerPickRight] = useState('df')
+    const [game4PlayerPickRight, setGame4PlayerPickRight] = useState('df')
+    const [game5PlayerPickRight, setGame5PlayerPickRight] = useState('df')
+    const [isReload, setIsReload] = useState(false)
+    
 
 
     useEffect(() => {
         async function fetchMyAPI() {
-            const response = await beAPI.Getcrrmatch()
-            const responseListChamps = await beAPI.GetChampsName()
-            const responseListTeam = await beAPI.GetListTeam()
-            try {
-                const responseLineupFullBlue = await beAPI.GetLineupFull(window.localStorage.getItem('team-1'))
-                const responseLineupFullRed = await beAPI.GetLineupFull(window.localStorage.getItem('team-2'))
-                window.localStorage.setItem('linupFull-1',JSON.stringify(await responseLineupFullBlue))
-                window.localStorage.setItem('linupFull-2',JSON.stringify(await responseLineupFullRed))
-                setLineupFullBlue(await responseLineupFullBlue)
-                setLineupFullRed(await responseLineupFullRed)
-            } catch (error) {
-                
-            }
-            // get list champs name 
-            setListChamp(await responseListChamps)
-            setListTeam(await responseListTeam)
-            window.localStorage.setItem('listteam', listTeam)
-            window.localStorage.setItem('champs',listChamp)
-
-            // localstorage save
-            window.localStorage.setItem('game',await response['game'])
-            window.localStorage.setItem('match',await response['matchName'])
-            window.localStorage.setItem('round',await response['round'])
-            window.localStorage.setItem('bo',await response['bo'])
-            window.localStorage.setItem('date',await response['date'])
-            window.localStorage.setItem('team-1',await response['team-1'])
-            window.localStorage.setItem('fullNameTeam-1',await response['fullNameTeam-1'])
-            window.localStorage.setItem('team-2',await response['team-2'])
-            window.localStorage.setItem('fullNameTeam-2',await response['fullNameTeam-2'])
-            window.localStorage.setItem('player1',await response['player1'])
-            window.localStorage.setItem('player2',await response['player2'])
-            window.localStorage.setItem('player3',await response['player3'])
-            window.localStorage.setItem('player4',await response['player4'])
-            window.localStorage.setItem('player5',await response['player5'])
-            window.localStorage.setItem('player6',await response['player6'])
-            window.localStorage.setItem('player7',await response['player7'])
-            window.localStorage.setItem('player8',await response['player8'])
-            window.localStorage.setItem('player9',await response['player9'])
-            window.localStorage.setItem('player10',await response['player10'])
-            window.localStorage.setItem('sc-1',await response['sc-1'])
-            window.localStorage.setItem('sc-2',await response['sc-2'])
-            window.localStorage.setItem('ban1',await response['ban1'])
-            window.localStorage.setItem('ban2',await response['ban2'])
-            window.localStorage.setItem('ban3',await response['ban3'])
-            window.localStorage.setItem('ban4',await response['ban4'])
-            window.localStorage.setItem('ban5',await response['ban5'])
-            window.localStorage.setItem('ban6',await response['ban6'])
-            window.localStorage.setItem('ban7',await response['ban7'])
-            window.localStorage.setItem('ban8',await response['ban8'])
-            window.localStorage.setItem('pick1',await response['pick1'])
-            window.localStorage.setItem('pick2',await response['pick2'])
-            window.localStorage.setItem('pick3',await response['pick3'])
-            window.localStorage.setItem('pick4',await response['pick4'])
-            window.localStorage.setItem('pick5',await response['pick5'])
-            window.localStorage.setItem('pick6',await response['pick6'])
-            window.localStorage.setItem('pick7',await response['pick7'])
-            window.localStorage.setItem('pick8',await response['pick8'])
-            window.localStorage.setItem('pick9',await response['pick9'])
-            window.localStorage.setItem('pick10',await response['pick10'])
-            
-            // set variable
-            
-            setGame(await response['game'])
-            setMatch(await response['matchName'])
-            setRound(await response['round'])
-            setBo(await response['bo'])
-            setDate(await response['date'])
-            setTeamBlue(await response['team-1'])
-            setTeamNameBlue(await response['fullNameTeam-1'])
-            setTeamRed(await response['team-2'])
-            setTeamNameRed(await response['fullNameTeam-2'])
-            setPlayer1(await response['player1'])
-            setPlayer2(await response['player2'])
-            setPlayer3(await response['player3'])
-            setPlayer4(await response['player4'])
-            setPlayer5(await response['player5'])
-            setPlayer6(await response['player6'])
-            setPlayer7(await response['player7'])
-            setPlayer8(await response['player8'])
-            setPlayer9(await response['player9'])
-            setPlayer10(await response['player10'])
-            setscrBlue(await response['sc-1'])
-            setscrRed(await response['sc-2'])
-            setBan1(await response['ban1'])
-            setBan2(await response['ban2'])
-            setBan3(await response['ban3'])
-            setBan4(await response['ban4'])
-            setBan5(await response['ban5'])
-            setBan6(await response['ban6'])
-            setBan7(await response['ban7'])
-            setBan8(await response['ban8'])
-            setPick1(await response['pick1'])
-            setPick2(await response['pick2'])
-            setPick3(await response['pick3'])
-            setPick4(await response['pick4'])
-            setPick5(await response['pick5'])
-            setPick6(await response['pick6'])
-            setPick7(await response['pick7'])
-            setPick8(await response['pick8'])
-            setPick9(await response['pick9'])
-            setPick10(await response['pick10'])
+            let response = await beAPI.Getcrrmatch()
+            console.log(response['player1'])
+            setGame(response['game'])
+            setMatch(response['matchName'])
+            setRound(response['round'])
+            setBo(response['bo'])
+            setDate(response['date'])
+            setTeamBlue(response['team-1'])
+            setTeamNameBlue(response['fullNameTeam-1'])
+            setTeamRed(response['team-2'])
+            setTeamNameRed(response['fullNameTeam-2'])
+            setPlayer1(response['player1'])
+            setPlayer2(response['player2'])
+            setPlayer3(response['player3'])
+            setPlayer4(response['player4'])
+            setPlayer5(response['player5'])
+            setPlayer6(response['player6'])
+            setPlayer7(response['player7'])
+            setPlayer8(response['player8'])
+            setGame1PlayerPickLeft(response['pickleft1'])
+            setGame2PlayerPickLeft(response['pickleft2'])
+            setGame3PlayerPickLeft(response['pickleft3'])
+            setGame4PlayerPickLeft(response['pickleft4'])
+            setGame5PlayerPickLeft(response['pickleft5'])
+            setGame1PlayerPickRight(response['pickright1'])
+            setGame2PlayerPickRight(response['pickright2'])
+            setGame3PlayerPickRight(response['pickright3'])
+            setGame4PlayerPickRight(response['pickright4'])
+            setGame5PlayerPickRight(response['pickright5'])
+            setscL1(response['scL1'])
+            setscL2(response['scL2'])
+            setscL3(response['scL3'])
+            setscL4(response['scL4'])
+            setscL5(response['scL5'])
+            setscR1(response['scR1'])
+            setscR2(response['scR2'])
+            setscR3(response['scR3'])
+            setscR4(response['scR4'])
+            setscR5(response['scR5'])
+            setpkL1(response['pkL1'])
+            setpkL2(response['pkL2'])
+            setpkL3(response['pkL3'])
+            setpkL4(response['pkL4'])
+            setpkL5(response['pkL5'])
+            setpkR1(response['pkR1'])
+            setpkR2(response['pkR2'])
+            setpkR3(response['pkR3'])
+            setpkR4(response['pkR4'])
+            setpkR5(response['pkR5'])
         }
-        fetchMyAPI()
-        }, [0])
-
+        fetchMyAPI()}, [isReload])
 
     // Input render
     function InputRender(props) {
-        async function onchangeInput(){
-            window.localStorage.setItem(props.inputID,document.getElementById(props.inputID).value)
-            if (props.inputID === 'team-1'){
-                if ((await beAPI.GetLineupFull(document.getElementById(props.inputID).value)) != null) {
-                    try {
-                        setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
-                        setTeamNameBlue(await beAPI.GetListTeam()[document.getElementById(props.inputID).value])
-                    } catch (error) {
-                    }
-                }
-            }else if(props.inputID === 'team-2') {
-                if ((await beAPI.GetLineupFull(document.getElementById(props.inputID).value)) != null) {
-                    try {
-                        setLineupFullBlue(await beAPI.GetLineupFull(document.getElementById(props.inputID).value))
-                        setTeamNameRed(await beAPI.GetListTeam()[document.getElementById(props.inputID).value])
-                    } catch (error) {
-                        
-                    }
-                }
-            }
-        }
-        function RenderOpt(props, index) {
-            return (
-                <option key={index} value={props} />
-            )
-        }
-        function Maplist(opt){
-            try {
-                return props.listData.map(opt)
-            } catch (error) {
-                console.log(1)
-            }
-        }
         return (
             <div className="input-div">
                 <label htmlFor={props.inputID} className={props.labelClassName}>{props.name}</label>
-                <input id={props.inputID} className={props.inputClassName} list={props.idDatalist}
-                    type="text" placeholder={props.placeholder} name={props.name} defaultValue={props.value} onChange={onchangeInput}></input>
-                <datalist id={props.idDatalist}>
-                    {Maplist(RenderOpt)}
-                </datalist>
+                <input id={props.inputID} className={props.inputClassName} 
+                     placeholder={props.placeholder} name={props.name} defaultValue={props.value}></input>
             </div>
         )
     }
@@ -214,417 +133,314 @@ function Backend() {
             </div>
         )
     }
+    function TextBoxRender(props) {
+        function rtFix(props){
+            if (props === '1'){
+                return "text-info-box text-info-box-fix"
+            }else{
+                return "text-info-box"
+            }
+
+        }
+        return (
+            <div className="text-info-ctn">
+                <h1 className="title-text-box">{props.title}</h1>
+                <div id={props.idTextBox} className={rtFix(props.fixed)}>{props.textinbox}</div>
+            </div>
+        )
+    }
+    function HandleStartLayout(){
+        ws.send('lineup-start')
+    }
+    function HandleOffLayout(){
+        ws.send('lineup-off')
+    }
+    function HandleSyncStatslayout(){
+        ws.send('lineup-sync')
+    }
+    function StartCountdown(){
+        try {
+            if(document.getElementById('start-time').value.split(':').length > 1 ){
+                ws.send(`startcountdown-${document.getElementById('start-time').value.split(':')[0]}-${document.getElementById('start-time').value.split(':')[1]}-${document.getElementById('giftcode').value}`)
+                
+            } 
+        } catch (error) {
+            console.log('err')
+        }
+    }
+    function StopCountdown(){
+        ws.send('stopcountdown')
+    }
+    function showCountdown(){
+        ws.send('showcountdown')
+    }
+    function MinusCountdown(){
+        try {
+            if(document.getElementById('minus-time').value.split(':').length > 1 ){
+                ws.send(`minus-${document.getElementById('minus-time').value.split(':')[0]}-${document.getElementById('minus-time').value.split(':')[1]}`)
+            } 
+        } catch (error) {
+            console.log('err')
+        }
+    }
+    function HandleSyncClick(){
+        beAPI.GetPull()
+        setIsReload(!isReload)
+    }
     function BackendBody() {
-        
         // Component Match ID check
         function MatchCreate() {
-            function GetStatsLocal(){
-                const statsNow = {'MVP1': '0','KDA1':'0','MVP2': '0','KDA2':'0','MVP3': '0','KDA3':'0','MVP4': '0','KDA4':'0','MVP5': '0','KDA5':'0','MVP6': '0','KDA6':'0','MVP7': '0','KDA7':'0','MVP8': '0','KDA8':'0','MVP9': '0','KDA9':'0','MVP10': '0','KDA10':'0'}
-                try {
-                    for (let index = 1; index <= 10; index++) {
-                        if (window.localStorage.getItem(`MVP${index}`) === null){
-                            statsNow[`MVP${index}`] = window.localStorage.getItem(`MVP${index}`);
-                        }else{
-                            statsNow[`MVP${index}`] = '0';
-                        }
-                        if (window.localStorage.getItem(`KDA${index}`) === null){
-                            statsNow[`KDA${index}`] = window.localStorage.getItem(`KDA${index}`);
-                        }else{
-                            statsNow[`KDA${index}`] = '0';
-                        }
-                    }
-                    return statsNow
-                } catch (error) {
-                    return statsNow
-                }
-            }
-            // Handle button click
-            async function HandleSyncButtonClick() {
-                    fetch(`http://${beAPI.hostIP}:14596/api/post/crm`, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "matchId": window.localStorage.getItem('match'),
-                            "matchName": window.localStorage.getItem('match'),
-                            "round": window.localStorage.getItem('round'),
-                            "date": window.localStorage.getItem('date'),
-                            "bo": window.localStorage.getItem('bo'),
-                            "game": window.localStorage.getItem('game'),
-                            "sc-1": window.localStorage.getItem('sc-1'),
-                            "sc-2" : window.localStorage.getItem('sc-2'),
-                            "team-1": window.localStorage.getItem('team-1'),
-                            "fullNameTeam-1": window.localStorage.getItem('fullNameTeam-1'),
-                            "team-2": window.localStorage.getItem('team-2'),
-                            "fullNameTeam-2": window.localStorage.getItem('fullNameTeam-2'),
-                            "player1": window.localStorage.getItem('player1'),
-                            "player2": window.localStorage.getItem('player2'),
-                            "player3": window.localStorage.getItem('player3'),
-                            "player4": window.localStorage.getItem('player4'),
-                            "player5": window.localStorage.getItem('player5'),
-                            "player6": window.localStorage.getItem('player6'),
-                            "player7": window.localStorage.getItem('player7'),
-                            "player8": window.localStorage.getItem('player8'),
-                            "player9": window.localStorage.getItem('player9'),
-                            "player10": window.localStorage.getItem('player10'),
-                            "stats": GetStatsLocal()
-                        })
-                    })
-                    setTimeout(function() {
-                        window.location.reload()
-                      }, 300);
-                    
-                }
-                // await return true then set reload
-            async function HandleSwapButtonClick() {
-                fetch(`http://${beAPI.hostIP}:14596/api/post/crm`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "matchId": window.localStorage.getItem('match'),
-                        "matchName": window.localStorage.getItem('match'),
-                        "round": window.localStorage.getItem('round'),
-                        "date": window.localStorage.getItem('date'),
-                        "bo": window.localStorage.getItem('bo'),
-                        "game": window.localStorage.getItem('game'),
-                        "sc-1": window.localStorage.getItem('sc-2'),
-                        "sc-2" : window.localStorage.getItem('sc-1'),
-                        "team-1": window.localStorage.getItem('team-2'),
-                        "fullNameTeam-1": window.localStorage.getItem('fullNameTeam-2'),
-                        "team-2": window.localStorage.getItem('team-1'),
-                        "fullNameTeam-2": window.localStorage.getItem('fullNameTeam-1'),
-                        "player1": window.localStorage.getItem('player6'),
-                        "player2": window.localStorage.getItem('player7'),
-                        "player3": window.localStorage.getItem('player8'),
-                        "player4": window.localStorage.getItem('player9'),
-                        "player5": window.localStorage.getItem('player10'),
-                        "player6": window.localStorage.getItem('player1'),
-                        "player7": window.localStorage.getItem('player2'),
-                        "player8": window.localStorage.getItem('player3'),
-                        "player9": window.localStorage.getItem('player4'),
-                        "player10": window.localStorage.getItem('player5'),
-                        "stats": GetStatsLocal()
-                    })
-                })
-                setTimeout(function() {
-                    window.location.reload()
-                  }, 300);
-                // await return true then set reload
-            }
-            // Handle create button
-    
             // Return component
             return (
                 <div id="match-create" className="box-ctn">
                     <h1 className="box-title">MATCH</h1>
-                    <InputRender
-                        name="MATCH"
-                        placeholder="MATCH ID"
-                        inputID="match"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="match-id-id-data-list"
-                        listData={['0']}
-                        value={window.localStorage.getItem('match')}
+                    <TextBoxRender
+                        fixed='0'
+                        idTextBox="match"
+                        textinbox={match}
+                        title="match"
                     />
-                    <InputRender
-                        name="BO"
-                        placeholder="BEST OF "
-                        inputID="bo"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="best-of-id-data-list"
-                        listData={["1", "2", "3", "5", "7"]}
-                        value={window.localStorage.getItem('bo')}
+                    <TextBoxRender
+                        fixed='0'
+                        idTextBox="bo"
+                        textinbox={bo}
+                        title="bo"
                     />
-                    <InputRender
-                        name="BLUE"
-                        placeholder="TEAM 1"
-                        inputID="team-1"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="team-1-id-data-list"
-                        listData={listTeam}
-                        value={window.localStorage.getItem('team-1')}
+                    <TextBoxRender
+                        fixed='0'
+                        idTextBox="team-1"
+                        textinbox={teamBlue}
+                        title="team 1"
                     />
-                    <InputRender
-                        name="RED"
-                        placeholder="TEAM 2"
-                        inputID="team-2"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="team-2-id-data-list"
-                        listData={listTeam}
-                        value={window.localStorage.getItem('team-2')}
-                    />
-                    <InputRender
-                        name="Game"
-                        placeholder="1"
-                        inputID="Game"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="game-id-data-list"
-                        listData={['1','2','3','4','5','6','7']}
-                        value={window.localStorage.getItem('game')}
+                    <TextBoxRender
+                        fixed='0'
+                        idTextBox="team2"
+                        textinbox={teamRed}
+                        title="team 2"
                     />
                     <BtnRender
                         btnName="SYNC MATCH"
-                        idBtn="syncBtn"
+                        idBtn="syncbtnn"
                         classBtn="btn"
-                        btnClick={HandleSyncButtonClick}
-                    />
-                    <BtnRender
-                        btnName="Swap side"
-                        idBtn="swapBtn"
-                        classBtn="btn"
-                        btnClick={HandleSwapButtonClick}
+                        btnClick={HandleSyncClick}
                     />
                 </div>
             )
         }
         // Stream info component
-        function StreamInfor() {
-            //  Caster name list
-            let CASTERLIST = ['Trần Nam', 'Đức Huy', 'Hồng Quân', 'Thanh Tùng', 'Nam Anh', 'Hoàng Sơn', 'Phương Thảo']
-            let casterListNow = window.localStorage.getItem("casterName")
-            let predictNow = window.localStorage.getItem("predictNow")
-            if (casterListNow === null) {
-                window.localStorage.setItem("casterName", JSON.stringify([CASTERLIST[0], CASTERLIST[1], CASTERLIST[6]]))
-            }
-            if (predictNow === null) {
-                window.localStorage.setItem("predictNow", JSON.stringify(["0-0", "0-0", "0-0"]))
-            }
-            // Handle click sync data stream
-            
-    
-            // Return component stream info
-            return (
-                <div id="streamInfo" className="box-ctn">
-                    <h1 className="box-title">STREAM INFO</h1>
-                    <InputRender
-                        name="CASTER"
-                        placeholder="Caster 1"
-                        inputID="Caster1"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="Caster1-id-data-list"
-                        listData={CASTERLIST}
-                        value={JSON.parse(casterListNow)[0]}
-                    />
-                    <InputRender
-                        name="CASTER"
-                        placeholder="Caster 2"
-                        inputID="Caster2"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="Caster2-id-data-list"
-                        listData={CASTERLIST}
-                        value={JSON.parse(casterListNow)[1]}
-                    />
-                    <InputRender
-                        name="HOST"
-                        placeholder="Host name"
-                        inputID="hostName"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="host-id-data-list"
-                        listData={CASTERLIST}
-                        value={JSON.parse(casterListNow)[2]}
-                    />
-                    <h1 className="box-title">PREDICT</h1>
-                    <InputRender
-                        name="PRD"
-                        placeholder="Caster 1"
-                        inputID="caster-1-Predict"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                        listData={[]}
-                        value={JSON.parse(predictNow)[0]}
-                    />
-                    <InputRender
-                        name="PRD"
-                        placeholder="Caster 2"
-                        inputID="caster-2-Predict"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                        listData={[]}
-                        value={JSON.parse(predictNow)[1]}
-                    />
-                    <InputRender
-                        name="PRD"
-                        placeholder="Host"
-                        inputID="host-Predict"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                        listData={['o','0']}
-                        value={JSON.parse(predictNow)[2]}
-                    />
-                </div>
-            )
-        }
+        
     
         // Match incoming component
         function MatchConfig() {
             return (
                 <div id="match-info-result">
-                    <h1 className="box-title">MATCH ID | #0 </h1>
+                    <h1 className="box-title">GAME 1 INFO</h1>
                     <div className="frag-ctn">
-                        <InputRender
-                            name="ROUND"
-                            placeholder="NAME"
-                            inputID="round"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list"
-                            listData={[]}
-                            value={round}
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scL1}
+                            title='score'
+                            idTextBox="scL1"
+                            classname="text-info-box-fix"
                         />
-                        <InputRender
-                            name="DATE"
-                            placeholder="DATE"
-                            inputID="date"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list"
-                            listData={[]}
-                            value={date}
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scR1}
+                            title='score'
+                            classname="text-info-box-fix"
+                            idTextBox="scR1"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkL1}
+                            title='PK Left'
+                            classname="text-info-box-fix"
+                            idTextBox="pkL1"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkR1}
+                            title='PK Right'
+                            classname="text-info-box-fix"
+                            idTextBox="pkR1"
                         />
                     </div>
-                    <h1 className="box-title">GAME {game} INFO</h1>
+                    <h1 className="box-title">GAME 2 INFO</h1>
                     <div className="frag-ctn">
-                        <InputRender
-                            name={teamBlue}
-                            placeholder={scBlue}
-                            inputID="sc-blue"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="sc-blue-id-data-list"
-                            listData={['0','1','2','3','4']}
-                            value={'0'}
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scL2}
+                            title='score'
+                            classname="text-info-box-fix"
+                            idTextBox="scL2"
                         />
-                        <InputRender
-                            name={teamRed}
-                            placeholder={scRed}
-                            inputID="sc-Red"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="sc-Red-id-data-list"
-                            listData={['0','1','2','3','4']}
-                            value={'0'}
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scR2}
+                            title='score'
+                            classname="text-info-box-fix"
+                            idTextBox="scR2"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkL2}
+                            title='PK Left'
+                            classname="text-info-box-fix"
+                            idTextBox="pkL2"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkR2}
+                            title='PK Right'
+                            classname="text-info-box-fix"
+                            idTextBox="pkR2"
                         />
                     </div>
-                    <h1 className="box-title">GAME {game} LINEUP</h1>
+                    <h1 className="box-title">GAME 3 INFO</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scL3}
+                            title='score'
+                            classname="text-info-box-fix"
+                            idTextBox="scL3"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scR3}
+                            title='score'
+                            classname="text-info-box-fix"
+                            idTextBox="scR3"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkL3}
+                            classname="text-info-box-fix"
+                            title='PK Left'
+                            idTextBox="pkL3"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkR3}
+                            title='PK Right'
+                            classname="text-info-box-fix"
+                            idTextBox="pkR3"
+                        />
+                    </div>
+                    <h1 className="box-title">GAME 4 INFO</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scL4}
+                            classname="text-info-box-fix"
+                            title='score'
+                            idTextBox="scL4"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scR4}
+                            classname="text-info-box-fix"
+                            title='score'
+                            idTextBox="scR4"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkL4}
+                            classname="text-info-box-fix"
+                            title='PK Left'
+                            idTextBox="pkL4"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkR4}
+                            title='PK Right'
+                            classname="text-info-box-fix"
+                            idTextBox="pkR4"
+                        />
+                    </div>
+                    <h1 className="box-title">GAME 5 INFO</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scL5}
+                            classname="text-info-box-fix"
+                            title='score'
+                            idTextBox="scL5"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={scR5}
+                            title='score'
+                            idTextBox="scR5"
+                            classname="text-info-box-fix"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkL5}
+                            title='PK Left'
+                            classname="text-info-box-fix"
+                            idTextBox="pkL5"
+                        />
+                        <TextBoxRender
+                            fixed='1'
+                            textinbox={pkR5}
+                            title='PK Right'
+                            classname="text-info-box-fix"
+                            idTextBox="pkR5"
+                        />
+                    </div>
+                    <h1 className="box-title">GAME LINEUP</h1>
                     <div className="frag-ctn">
                         <ul id='box-lineup-blue' className="box-lineup" >
-                            <InputRender
-                                name="DSL"
-                                placeholder="DSL"
-                                inputID="player1"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="blueDSL-id-data-list"
-                                listData={lineupFullBlue}
-                                value={player1}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL1"
+                                idTextBox="player1"
+                                textinbox={player1}
                             />
-                            <InputRender
-                                name="JGL"
-                                placeholder="JGL"
-                                inputID="player2"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="blueJGL-id-data-list"
-                                listData={lineupFullBlue}
-                                value={player2}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL2"
+                                idTextBox="player2"
+                                textinbox={player2}
                             />
-                            <InputRender
-                                name="MID"
-                                placeholder="MID"
-                                inputID="player3"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="blueMID-id-data-list"
-                                listData={lineupFullBlue}
-                                value={player3}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL3"
+                                idTextBox="player3"
+                                textinbox={player3}
                             />
-                            <InputRender
-                                name="ADL"
-                                placeholder="ADL"
-                                inputID="player4"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="blueADL-id-data-list"
-                                listData={lineupFullBlue}
-                                value={player4}
-                            />
-                            <InputRender
-                                name="SUP"
-                                placeholder="SUP"
-                                inputID="player5"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="blueSUP-id-data-list"
-                                listData={lineupFullBlue}
-                                value={player5}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL4"
+                                idTextBox="player4"
+                                textinbox={player4}
                             />
                         </ul>
                         <ul id='box-lineup-red' className="box-lineup" >
-                        <InputRender
-                                name="DSL"
-                                placeholder="DSL"
-                                inputID="player6"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="RedDSL-id-data-list"
-                                listData={lineupFullRed}
-                                value={player6}
+                        <TextBoxRender
+                            fixed='0'
+                                title="PL5"
+                                idTextBox="player5"
+                                textinbox={player5}
                             />
-                            <InputRender
-                                name="JGL"
-                                placeholder="JGL"
-                                inputID="player7"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="RedJGL-id-data-list"
-                                listData={lineupFullRed}
-                                value={player7}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL6"
+                                idTextBox="player6"
+                                textinbox={player6}
                             />
-                            <InputRender
-                                name="MID"
-                                placeholder="MID"
-                                inputID="player8"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="RedMID-id-data-list"
-                                listData={lineupFullRed}
-                                value={player8}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL7"
+                                idTextBox="player7"
+                                textinbox={player7}
                             />
-                            <InputRender
-                                name="ADL"
-                                placeholder="ADL"
-                                inputID="player9"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="RedADL-id-data-list"
-                                listData={lineupFullRed}
-                                value={player9}
-                            />
-                            <InputRender
-                                name="SUP"
-                                placeholder="SUP"
-                                inputID="player10"
-                                labelClassName="label-style"
-                                inputClassName="input-style"
-                                idDatalist="RedSUP-id-data-list"
-                                listData={lineupFullRed}
-                                value={player10}
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL8"
+                                idTextBox="player8"
+                                textinbox={player8}
                             />
                         </ul>
                     </div>
@@ -634,390 +450,162 @@ function Backend() {
         // Return backend component
         // banpick container
         function BanpickContainer(){
-            function HandleSyncBanpickButtonClick() {
-
-            }
             return (
                 <div id="banpickContainer" className="box-ctn">
-                    <h1 className="box-title">BAN GAME {game}</h1>
+                    <h1 className="box-title">BANPICK GAME 1</h1>
                     <div className="frag-ctn">
-                        <InputRender
-                            name="Ban 1"
-                            placeholder="Ban 1"
-                            inputID="ban1"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game1PlayerPick-left"
+                            textinbox={game1PlayerPickLeft}
                         />
-                        <InputRender
-                            name="Ban 5"
-                            placeholder="Ban 5"
-                            inputID="ban5"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 2"
-                            placeholder="Ban 2"
-                            inputID="ban2"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 6"
-                            placeholder="Ban 6"
-                            inputID="ban6"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 3"
-                            placeholder="Ban 3"
-                            inputID="ban3"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 7"
-                            placeholder="Ban 7"
-                            inputID="ban7"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 4"
-                            placeholder="Ban 4"
-                            inputID="ban4"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="Ban 8"
-                            placeholder="Ban 8"
-                            inputID="ban8"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game1PlayerPick-right"
+                            textinbox={game1PlayerPickRight}
                         />
                     </div>
-                    <h1 className="box-title">PICK GAME {game}</h1>
+                    <h1 className="box-title">BANPICK GAME 2</h1>
                     <div className="frag-ctn">
-                        <InputRender
-                            name="pick 1"
-                            placeholder="pick 1"
-                            inputID="pick1"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-pickpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game2PlayerPick-left"
+                            textinbox={game2PlayerPickLeft}
+
                         />
-                        <InputRender
-                            name="pick 6"
-                            placeholder="pick 6"
-                            inputID="pick6"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game2PlayerPick-right"
+                            textinbox={game2PlayerPickRight}
+
                         />
-                        <InputRender
-                            name="pick 2"
-                            placeholder="pick 2"
-                            inputID="pick2"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-pickpick"
-                            listData={listChamp}
+                    </div>
+                    <h1 className="box-title">BANPICK GAME 3</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game3PlayerPick-left"
+                            textinbox={game3PlayerPickLeft}
                         />
-                        <InputRender
-                            name="pick 7"
-                            placeholder="pick 7"
-                            inputID="pick7"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game3PlayerPick-right"
+                            textinbox={game3PlayerPickRight}
+
                         />
-                        <InputRender
-                            name="pick 3"
-                            placeholder="pick 3"
-                            inputID="pick3"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-pickpick"
-                            listData={listChamp}
+                    </div>
+                    <h1 className="box-title">BANPICK GAME 4</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game4PlayerPick-left"
+                            textinbox={game4PlayerPickLeft}
                         />
-                        <InputRender
-                            name="pick 8"
-                            placeholder="pick 8"
-                            inputID="pick8"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game4PlayerPick-right"
+                            textinbox={game4PlayerPickRight}
+
                         />
-                        <InputRender
-                            name="pick 4"
-                            placeholder="pick 4"
-                            inputID="pick4"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-pickpick"
-                            listData={listChamp}
+                    </div>
+                    <h1 className="box-title">BANPICK GAME 5</h1>
+                    <div className="frag-ctn">
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game5PlayerPick-left"
+                            textinbox={game5PlayerPickLeft}
+
                         />
-                        <InputRender
-                            name="pick 9"
-                            placeholder="pick 9"
-                            inputID="pick9"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="pick 5"
-                            placeholder="pick 5"
-                            inputID="pick5"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick-pickpick"
-                            listData={listChamp}
-                        />
-                        <InputRender
-                            name="pick 10"
-                            placeholder="pick 10"
-                            inputID="pick10"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-banpick"
-                            listData={listChamp}
+                        <TextBoxRender
+                            fixed='0'
+                            title="player"
+                            idTextBox="game5PlayerPick-right"
+                            textinbox={game5PlayerPickRight}
                         />
                         <BtnRender
-                            btnName="SYNC BANPICK"
-                            idBtn="syncBanpickBtn"
+                            btnName="Start Lineup"
+                            idBtn="syncBtn"
                             classBtn="btn"
-                            btnClick={HandleSyncBanpickButtonClick}
+                            btnClick={HandleStartLayout}
                         />
                         <BtnRender
-                            btnName="RESET BANPICK"
-                            idBtn="resetBanpickBtn"
+                            btnName="Off Lineup"
+                            idBtn="swapBtn"
                             classBtn="btn"
-                            btnClick={HandleSyncBanpickButtonClick}
+                            btnClick={HandleOffLayout}
+                        />
+                        <BtnRender
+                            btnName="Sync Lineup"
+                            idBtn="swapBtn"
+                            classBtn="btn"
+                            btnClick={HandleSyncStatslayout}
                         />
                     </div>
                 </div>
             )
         }
-        function StatsContainer(){
-            function GetValueStats(props){
-                try {
-                    return window.localStorage.getItem(props)
-                } catch (error) {
-                    
-                }
-            }
-            function HandleSyncStatsButtonClick() {
-
-            }
+        function StreamInfor() {
+            // Return component stream info
             return (
-                <div id="banpickContainer" className="box-ctn">
-                    <h1 className="box-title">Player Stats</h1>
-                    <div className="frag-ctn">
-                        <InputRender
-                            name="MVP 1"
-                            placeholder="MVP 1"
-                            inputID="MVP1"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP1')}
-                        />
-                        <InputRender
-                            name="KDA 1"
-                            placeholder="KDA 1"
-                            inputID="KDA1"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA1')}
-                        />
-                        <InputRender
-                            name="MVP 2"
-                            placeholder="MVP 2"
-                            inputID="MVP2"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP2')}
-                        />
-                        <InputRender
-                            name="KDA 2"
-                            placeholder="KDA 2"
-                            inputID="KDA2"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA2')}
-                        />
-                        <InputRender
-                            name="MVP 3"
-                            placeholder="MVP 3"
-                            inputID="MVP3"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP3')}
-                        />
-                        <InputRender
-                            name="KDA 3"
-                            placeholder="KDA 3"
-                            inputID="KDA3"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA3')}
-                        />
-                        <InputRender
-                            name="MVP 4"
-                            placeholder="MVP 4"
-                            inputID="MVP4"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP4')}
-                        />
-                        <InputRender
-                            name="KDA 4"
-                            placeholder="KDA 4"
-                            inputID="KDA4"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA4')}
-                        />
-                        <InputRender
-                            name="MVP 5"
-                            placeholder="MVP 5"
-                            inputID="MVP5"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP5')}
-                        />
-                        <InputRender
-                            name="KDA 5"
-                            placeholder="KDA 5"
-                            inputID="KDA5"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA5')}
-                        />
-                        <InputRender
-                            name="MVP 6"
-                            placeholder="MVP 6"
-                            inputID="MVP6"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP6')}
-                        />
-                        <InputRender
-                            name="KDA 6"
-                            placeholder="KDA 6"
-                            inputID="KDA6"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA6')}
-                        />
-                        <InputRender
-                            name="MVP 7"
-                            placeholder="MVP 7"
-                            inputID="MVP7"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP7')}
-                        />
-                        <InputRender
-                            name="KDA 7"
-                            placeholder="KDA 7"
-                            inputID="KDA7"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA7')}
-                        />
-                        <InputRender
-                            name="MVP 8"
-                            placeholder="MVP 8"
-                            inputID="MVP8"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP8')}
-                        />
-                        <InputRender
-                            name="KDA 8"
-                            placeholder="KDA 8"
-                            inputID="KDA8"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA8')}
-                        />
-                        <InputRender
-                            name="MVP 9"
-                            placeholder="MVP 9"
-                            inputID="MVP9"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP9')}
-                        />
-                        <InputRender
-                            name="KDA 9"
-                            placeholder="KDA 9"
-                            inputID="KDA9"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA9')}
-                        />
-                        <InputRender
-                            name="MVP 10"
-                            placeholder="MVP 10"
-                            inputID="MVP10"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-mvp"
-                            value={GetValueStats('MVP10')}
-                        />
-                        <InputRender
-                            name="KDA 10"
-                            placeholder="KDA 10"
-                            inputID="KDA10"
-                            labelClassName="label-style"
-                            inputClassName="input-style"
-                            idDatalist="id-data-list-kda"
-                            value={GetValueStats('KDA10')}
-                        />
-                    </div>
+                <div id="streamInfo" className="box-ctn">
+                    <h1 className="box-title">Countdown Code</h1>
+                    <InputRender
+                        name="Total Time"
+                        placeholder="time"
+                        inputID="start-time"
+                        labelClassName="label-style"
+                        inputClassName="input-style"
+                        idDatalist="id-data-list"
+                    />
+                    <InputRender
+                        name="Code"
+                        placeholder="giftcode"
+                        inputID="giftcode"
+                        labelClassName="label-style"
+                        inputClassName="input-style"
+                        idDatalist="id-data-list"
+                    />
+                    <BtnRender
+                        btnName="Show"
+                        idBtn="show-countdown"
+                        classBtn="btn"
+                        btnClick={showCountdown}
+                    />
+                    <BtnRender
+                        btnName="Start Countdown"
+                        idBtn="start-countdown"
+                        classBtn="btn"
+                        btnClick={StartCountdown}
+                    />
+                    <BtnRender
+                        btnName="Stop Countdown"
+                        idBtn="stop-countdown"
+                        classBtn="btn"
+                        btnClick={StopCountdown}
+                    />
+                    <InputRender
+                        name="Minus"
+                        placeholder="Time"
+                        inputID="minus-time"
+                        labelClassName="label-style"
+                        inputClassName="input-style"
+                        idDatalist="id-data-list"
+                    />
+                    <BtnRender
+                        btnName="Minus time"
+                        idBtn="minus-time-btn"
+                        classBtn="btn"
+                        btnClick={MinusCountdown}
+                    />
                 </div>
             )
         }
@@ -1032,9 +620,6 @@ function Backend() {
                 </div>
                 <div className="colum-ctn">
                     <BanpickContainer/>
-                </div>
-                <div className="colum-ctn">
-                    <StatsContainer/>
                 </div>
             </div>
         );
