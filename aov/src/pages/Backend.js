@@ -13,50 +13,27 @@ function Backend() {
     const [round, setRound] = useState('swiss stage')
     const [bo, setBo] = useState('3')
     const [date, setDate] = useState('20/10/2024')
-    const [teamBlue, setTeamBlue] = useState('STV')
-    const [teamNameBlue, setTeamNameBlue] = useState('Hà Nội')
-    const [teamRed, setTeamRed] = useState('STV')
-    const [teamNameRed, setTeamNameRed] = useState('Hà Nội')
-    const [player1, setPlayer1] = useState('player1')
-    const [player2, setPlayer2] = useState('player2')
-    const [player3, setPlayer3] = useState('player3')
-    const [player4, setPlayer4] = useState('player4')
-    const [player5, setPlayer5] = useState('player5')
-    const [player6, setPlayer6] = useState('player6')
-    const [player7, setPlayer7] = useState('player7')
-    const [player8, setPlayer8] = useState('player8')
-    const [scL1, setscL1] = useState('0')
-    const [scL2, setscL2] = useState('0')
+    const [teamL, setTeamL] = useState('STV')
+    const [fullNameL, setFullnameL] = useState('Hà Nội')
+    const [teamR, setTeamR] = useState('STV')
+    const [fullnameR, setFullnameR] = useState('Hà Nội')
+    const [playerLineup1, setPlayerLineup1] = useState('player1')
+    const [playerLineup2, setPlayerLineup2] = useState('player2')
+    const [playerLineup3, setPlayerLineup3] = useState('player3')
+    const [playerLineup4, setPlayerLineup4] = useState('player4')
+    const [playerLineup5, setPlayerLineup5] = useState('player5')
+    const [playerLineup6, setPlayerLineup6] = useState('player6')
+    const [playerLineup7, setPlayerLineup7] = useState('player7')
+    const [playerLineup8, setPlayerLineup8] = useState('player8')
+    const [playerLineup9, setPlayerLineup9] = useState('player9')
+    const [playerLineup10, setPlayerLineup10] = useState('player10')
+    const [scL, setScL] = useState('0')
+    const [scR, setScR] = useState('0')
+    const [statusL, setStatusL] = useState('0')
+    const [statusR, setStatusR] = useState('0')
     const [scL3, setscL3] = useState('0')
-    const [scL4, setscL4] = useState('0')
-    const [scL5, setscL5] = useState('0')
-    const [scR1, setscR1] = useState('0')
-    const [scR2, setscR2] = useState('0')
-    const [scR3, setscR3] = useState('0')
-    const [scR4, setscR4] = useState('0')
-    const [scR5, setscR5] = useState('0')
-    const [pkL1, setpkL1] = useState('0')
-    const [pkL2, setpkL2] = useState('0')
-    const [pkL3, setpkL3] = useState('0')
-    const [pkL4, setpkL4] = useState('0')
-    const [pkL5, setpkL5] = useState('0')
-    const [pkR1, setpkR1] = useState('0')
-    const [pkR2, setpkR2] = useState('0')
-    const [pkR3, setpkR3] = useState('0')
-    const [pkR4, setpkR4] = useState('0')
-    const [pkR5, setpkR5] = useState('0')
 
     // banpick const
-    const [game1PlayerPickLeft, setGame1PlayerPickLeft] = useState('df')
-    const [game2PlayerPickLeft, setGame2PlayerPickLeft] = useState('df')
-    const [game3PlayerPickLeft, setGame3PlayerPickLeft] = useState('df')
-    const [game4PlayerPickLeft, setGame4PlayerPickLeft] = useState('df')
-    const [game5PlayerPickLeft, setGame5PlayerPickLeft] = useState('df')
-    const [game1PlayerPickRight, setGame1PlayerPickRight] = useState('df')
-    const [game2PlayerPickRight, setGame2PlayerPickRight] = useState('df')
-    const [game3PlayerPickRight, setGame3PlayerPickRight] = useState('df')
-    const [game4PlayerPickRight, setGame4PlayerPickRight] = useState('df')
-    const [game5PlayerPickRight, setGame5PlayerPickRight] = useState('df')
     const [isReload, setIsReload] = useState(false)
     
 
@@ -64,17 +41,25 @@ function Backend() {
     useEffect(() => {
         async function fetchMyAPI() {
             let response = await beAPI.Getcrrmatch()
-            console.log(response['player1'])
             setGame(response['game'])
-            setMatch(response['matchName'])
+            setMatch(response['match'])
             setRound(response['round'])
             setBo(response['bo'])
             setDate(response['date'])
-            setTeamBlue(response['team-1'])
-            setTeamNameBlue(response['fullNameTeam-1'])
-            setTeamRed(response['team-2'])
-            setTeamNameRed(response['fullNameTeam-2'])
-            setPlayer1(response['player1'])
+            setTeamL(response['teamL'])
+            setFullnameL(response['fullNameL'])
+            setTeamR(response['teamR'])
+            setFullnameR(response['fullNameR'])
+            setPlayerLineup1(response['playerLineup1'])
+            setPlayerLineup2(response['playerLineup2'])
+            setPlayerLineup3(response['playerLineup3'])
+            setPlayerLineup4(response['playerLineup4'])
+            setPlayerLineup5(response['playerLineup5'])
+            setPlayerLineup6(response['playerLineup6'])
+            setPlayerLineup7(response['playerLineup7'])
+            setPlayerLineup8(response['playerLineup8'])
+            setPlayerLineup9(response['playerLineup9'])
+            setPlayerLineup10(response['playerLineup10'])
             setPlayer2(response['player2'])
             setPlayer3(response['player3'])
             setPlayer4(response['player4'])
@@ -82,36 +67,6 @@ function Backend() {
             setPlayer6(response['player6'])
             setPlayer7(response['player7'])
             setPlayer8(response['player8'])
-            setGame1PlayerPickLeft(response['pickleft1'])
-            setGame2PlayerPickLeft(response['pickleft2'])
-            setGame3PlayerPickLeft(response['pickleft3'])
-            setGame4PlayerPickLeft(response['pickleft4'])
-            setGame5PlayerPickLeft(response['pickleft5'])
-            setGame1PlayerPickRight(response['pickright1'])
-            setGame2PlayerPickRight(response['pickright2'])
-            setGame3PlayerPickRight(response['pickright3'])
-            setGame4PlayerPickRight(response['pickright4'])
-            setGame5PlayerPickRight(response['pickright5'])
-            setscL1(response['scL1'])
-            setscL2(response['scL2'])
-            setscL3(response['scL3'])
-            setscL4(response['scL4'])
-            setscL5(response['scL5'])
-            setscR1(response['scR1'])
-            setscR2(response['scR2'])
-            setscR3(response['scR3'])
-            setscR4(response['scR4'])
-            setscR5(response['scR5'])
-            setpkL1(response['pkL1'])
-            setpkL2(response['pkL2'])
-            setpkL3(response['pkL3'])
-            setpkL4(response['pkL4'])
-            setpkL5(response['pkL5'])
-            setpkR1(response['pkR1'])
-            setpkR2(response['pkR2'])
-            setpkR3(response['pkR3'])
-            setpkR4(response['pkR4'])
-            setpkR5(response['pkR5'])
         }
         fetchMyAPI()}, [isReload])
 
@@ -158,31 +113,7 @@ function Backend() {
     function HandleSyncStatslayout(){
         ws.send('lineup-sync')
     }
-    function StartCountdown(){
-        try {
-            if(document.getElementById('start-time').value.split(':').length > 1 ){
-                ws.send(`startcountdown-${document.getElementById('start-time').value.split(':')[0]}-${document.getElementById('start-time').value.split(':')[1]}-${document.getElementById('giftcode').value}`)
-                
-            } 
-        } catch (error) {
-            console.log('err')
-        }
-    }
-    function StopCountdown(){
-        ws.send('stopcountdown')
-    }
-    function showCountdown(){
-        ws.send('showcountdown')
-    }
-    function MinusCountdown(){
-        try {
-            if(document.getElementById('minus-time').value.split(':').length > 1 ){
-                ws.send(`minus-${document.getElementById('minus-time').value.split(':')[0]}-${document.getElementById('minus-time').value.split(':')[1]}`)
-            } 
-        } catch (error) {
-            console.log('err')
-        }
-    }
+    
     function HandleSyncClick(){
         beAPI.GetPull()
         setIsReload(!isReload)
@@ -531,84 +462,11 @@ function Backend() {
                             idTextBox="game5PlayerPick-right"
                             textinbox={game5PlayerPickRight}
                         />
-                        <BtnRender
-                            btnName="Start Lineup"
-                            idBtn="syncBtn"
-                            classBtn="btn"
-                            btnClick={HandleStartLayout}
-                        />
-                        <BtnRender
-                            btnName="Off Lineup"
-                            idBtn="swapBtn"
-                            classBtn="btn"
-                            btnClick={HandleOffLayout}
-                        />
-                        <BtnRender
-                            btnName="Sync Lineup"
-                            idBtn="swapBtn"
-                            classBtn="btn"
-                            btnClick={HandleSyncStatslayout}
-                        />
                     </div>
                 </div>
             )
         }
-        function StreamInfor() {
-            // Return component stream info
-            return (
-                <div id="streamInfo" className="box-ctn">
-                    <h1 className="box-title">Countdown Code</h1>
-                    <InputRender
-                        name="Total Time"
-                        placeholder="time"
-                        inputID="start-time"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                    />
-                    <InputRender
-                        name="Code"
-                        placeholder="giftcode"
-                        inputID="giftcode"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                    />
-                    <BtnRender
-                        btnName="Show"
-                        idBtn="show-countdown"
-                        classBtn="btn"
-                        btnClick={showCountdown}
-                    />
-                    <BtnRender
-                        btnName="Start Countdown"
-                        idBtn="start-countdown"
-                        classBtn="btn"
-                        btnClick={StartCountdown}
-                    />
-                    <BtnRender
-                        btnName="Stop Countdown"
-                        idBtn="stop-countdown"
-                        classBtn="btn"
-                        btnClick={StopCountdown}
-                    />
-                    <InputRender
-                        name="Minus"
-                        placeholder="Time"
-                        inputID="minus-time"
-                        labelClassName="label-style"
-                        inputClassName="input-style"
-                        idDatalist="id-data-list"
-                    />
-                    <BtnRender
-                        btnName="Minus time"
-                        idBtn="minus-time-btn"
-                        classBtn="btn"
-                        btnClick={MinusCountdown}
-                    />
-                </div>
-            )
-        }
+        
         return (
             <div className="body-ctn row-ctn">
                 <div className="colum-ctn">
