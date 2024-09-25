@@ -60,13 +60,6 @@ function Backend() {
             setPlayerLineup8(response['playerLineup8'])
             setPlayerLineup9(response['playerLineup9'])
             setPlayerLineup10(response['playerLineup10'])
-            setPlayer2(response['player2'])
-            setPlayer3(response['player3'])
-            setPlayer4(response['player4'])
-            setPlayer5(response['player5'])
-            setPlayer6(response['player6'])
-            setPlayer7(response['player7'])
-            setPlayer8(response['player8'])
         }
         fetchMyAPI()}, [isReload])
 
@@ -140,13 +133,13 @@ function Backend() {
                     <TextBoxRender
                         fixed='0'
                         idTextBox="team-1"
-                        textinbox={teamBlue}
+                        textinbox={teamL}
                         title="team 1"
                     />
                     <TextBoxRender
                         fixed='0'
                         idTextBox="team2"
-                        textinbox={teamRed}
+                        textinbox={teamR}
                         title="team 2"
                     />
                     <BtnRender
@@ -169,155 +162,31 @@ function Backend() {
                     <div className="frag-ctn">
                         <TextBoxRender
                             fixed='1'
-                            textinbox={scL1}
+                            textinbox={'scL1'}
                             title='score'
                             idTextBox="scL1"
                             classname="text-info-box-fix"
                         />
                         <TextBoxRender
                             fixed='1'
-                            textinbox={scR1}
+                            textinbox={'scR1'}
                             title='score'
                             classname="text-info-box-fix"
                             idTextBox="scR1"
                         />
                         <TextBoxRender
                             fixed='1'
-                            textinbox={pkL1}
+                            textinbox={'pkL1'}
                             title='PK Left'
                             classname="text-info-box-fix"
                             idTextBox="pkL1"
                         />
                         <TextBoxRender
                             fixed='1'
-                            textinbox={pkR1}
+                            textinbox={'pkR1'}
                             title='PK Right'
                             classname="text-info-box-fix"
                             idTextBox="pkR1"
-                        />
-                    </div>
-                    <h1 className="box-title">GAME 2 INFO</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scL2}
-                            title='score'
-                            classname="text-info-box-fix"
-                            idTextBox="scL2"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scR2}
-                            title='score'
-                            classname="text-info-box-fix"
-                            idTextBox="scR2"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkL2}
-                            title='PK Left'
-                            classname="text-info-box-fix"
-                            idTextBox="pkL2"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkR2}
-                            title='PK Right'
-                            classname="text-info-box-fix"
-                            idTextBox="pkR2"
-                        />
-                    </div>
-                    <h1 className="box-title">GAME 3 INFO</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scL3}
-                            title='score'
-                            classname="text-info-box-fix"
-                            idTextBox="scL3"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scR3}
-                            title='score'
-                            classname="text-info-box-fix"
-                            idTextBox="scR3"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkL3}
-                            classname="text-info-box-fix"
-                            title='PK Left'
-                            idTextBox="pkL3"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkR3}
-                            title='PK Right'
-                            classname="text-info-box-fix"
-                            idTextBox="pkR3"
-                        />
-                    </div>
-                    <h1 className="box-title">GAME 4 INFO</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scL4}
-                            classname="text-info-box-fix"
-                            title='score'
-                            idTextBox="scL4"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scR4}
-                            classname="text-info-box-fix"
-                            title='score'
-                            idTextBox="scR4"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkL4}
-                            classname="text-info-box-fix"
-                            title='PK Left'
-                            idTextBox="pkL4"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkR4}
-                            title='PK Right'
-                            classname="text-info-box-fix"
-                            idTextBox="pkR4"
-                        />
-                    </div>
-                    <h1 className="box-title">GAME 5 INFO</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scL5}
-                            classname="text-info-box-fix"
-                            title='score'
-                            idTextBox="scL5"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={scR5}
-                            title='score'
-                            idTextBox="scR5"
-                            classname="text-info-box-fix"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkL5}
-                            title='PK Left'
-                            classname="text-info-box-fix"
-                            idTextBox="pkL5"
-                        />
-                        <TextBoxRender
-                            fixed='1'
-                            textinbox={pkR5}
-                            title='PK Right'
-                            classname="text-info-box-fix"
-                            idTextBox="pkR5"
                         />
                     </div>
                     <h1 className="box-title">GAME LINEUP</h1>
@@ -327,52 +196,64 @@ function Backend() {
                                 fixed='0'
                                 title="PL1"
                                 idTextBox="player1"
-                                textinbox={player1}
+                                textinbox={playerLineup1}
                             />
                             <TextBoxRender
                                 fixed='0'
                                 title="PL2"
                                 idTextBox="player2"
-                                textinbox={player2}
+                                textinbox={playerLineup2}
                             />
                             <TextBoxRender
                                 fixed='0'
                                 title="PL3"
                                 idTextBox="player3"
-                                textinbox={player3}
+                                textinbox={playerLineup3}
                             />
                             <TextBoxRender
                                 fixed='0'
                                 title="PL4"
                                 idTextBox="player4"
-                                textinbox={player4}
+                                textinbox={playerLineup4}
+                            />
+                            <TextBoxRender
+                                fixed='0'
+                                title="PL5"
+                                idTextBox="player5"
+                                textinbox={playerLineup5}
                             />
                         </ul>
                         <ul id='box-lineup-red' className="box-lineup" >
                         <TextBoxRender
                             fixed='0'
-                                title="PL5"
-                                idTextBox="player5"
-                                textinbox={player5}
-                            />
-                            <TextBoxRender
-                                fixed='0'
-                                title="PL6"
-                                idTextBox="player6"
-                                textinbox={player6}
-                            />
-                            <TextBoxRender
-                                fixed='0'
-                                title="PL7"
-                                idTextBox="player7"
-                                textinbox={player7}
-                            />
-                            <TextBoxRender
-                                fixed='0'
-                                title="PL8"
-                                idTextBox="player8"
-                                textinbox={player8}
-                            />
+                            title="PL6"
+                            idTextBox="player6"
+                            textinbox={playerLineup6}
+                        />
+                        <TextBoxRender
+                            fixed='0'
+                            title="PL7"
+                            idTextBox="player7"
+                            textinbox={playerLineup7}
+                        />
+                        <TextBoxRender
+                            fixed='0'
+                            title="PL8"
+                            idTextBox="player8"
+                            textinbox={playerLineup8}
+                        />
+                        <TextBoxRender
+                            fixed='0'
+                            title="PL9"
+                            idTextBox="player9"
+                            textinbox={playerLineup9}
+                        />
+                        <TextBoxRender
+                            fixed='0'
+                            title="PL10"
+                            idTextBox="player10"
+                            textinbox={playerLineup10}
+                        />
                         </ul>
                     </div>
                 </div>
@@ -389,80 +270,16 @@ function Backend() {
                             fixed='0'
                             title="player"
                             idTextBox="game1PlayerPick-left"
-                            textinbox={game1PlayerPickLeft}
+                            textinbox={'game1PlayerPickLeft'}
                         />
                         <TextBoxRender
                             fixed='0'
                             title="player"
                             idTextBox="game1PlayerPick-right"
-                            textinbox={game1PlayerPickRight}
+                            textinbox={'1'}
                         />
                     </div>
-                    <h1 className="box-title">BANPICK GAME 2</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game2PlayerPick-left"
-                            textinbox={game2PlayerPickLeft}
-
-                        />
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game2PlayerPick-right"
-                            textinbox={game2PlayerPickRight}
-
-                        />
-                    </div>
-                    <h1 className="box-title">BANPICK GAME 3</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game3PlayerPick-left"
-                            textinbox={game3PlayerPickLeft}
-                        />
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game3PlayerPick-right"
-                            textinbox={game3PlayerPickRight}
-
-                        />
-                    </div>
-                    <h1 className="box-title">BANPICK GAME 4</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game4PlayerPick-left"
-                            textinbox={game4PlayerPickLeft}
-                        />
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game4PlayerPick-right"
-                            textinbox={game4PlayerPickRight}
-
-                        />
-                    </div>
-                    <h1 className="box-title">BANPICK GAME 5</h1>
-                    <div className="frag-ctn">
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game5PlayerPick-left"
-                            textinbox={game5PlayerPickLeft}
-
-                        />
-                        <TextBoxRender
-                            fixed='0'
-                            title="player"
-                            idTextBox="game5PlayerPick-right"
-                            textinbox={game5PlayerPickRight}
-                        />
-                    </div>
+                    
                 </div>
             )
         }
@@ -471,7 +288,6 @@ function Backend() {
             <div className="body-ctn row-ctn">
                 <div className="colum-ctn">
                     <MatchCreate/>
-                    <StreamInfor/>
                 </div>
                 <div className="box-ctn">
                     <MatchConfig/>
